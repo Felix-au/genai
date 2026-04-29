@@ -107,6 +107,7 @@ class ModelEngine:
             self.signals.inference_error.emit("Model not loaded yet")
             return
         prompt = self._build_prompt(code, context)
+        self.last_prompt = prompt
         self._inference_thread = InferenceThread(self, prompt)
         self._inference_thread.start()
 

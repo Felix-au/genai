@@ -104,37 +104,55 @@ def _query_howdoi(query: str) -> str:
     return ""
 
 
-def enrich_context(code: str) -> str:
+def enrich_context(code: str) -> dict:
     """
     Main entry: extract keywords from code, query web sources,
-    return a concise context string.
+    return a dict with structured results for logging.
+
+    Returns:
+        {
+            "batches": ["word1 word2 ...", ...],
+            "queries": [{"source": "Wikipedia"|"StackOverflow", "query": "...", "result": "..."|""}, ...],
+            "context": "assembled context string"
+        }
     """
-    if not CONTEXT_CONFIG["enabled"]:
-        return ""
+    empty = {"batches": [], "queries": [], "context": ""}
 
     batches = extract_keyword_batches(code)
     if not batches:
-        return ""
+        return empty
 
     log.debug(f"Context enrichment: {len(batches)} keyword batches")
+    query_log = []     # structured log of every query
     results = []
     timeout = CONTEXT_CONFIG["query_timeout_seconds"]
 
     with concurrent.futures.ThreadPoolExecutor(max_workers=4) as pool:
-        wiki_futures = {pool.submit(_query_wikipedia, b): b for b in batches[:3]}
-        so_futures = {pool.submit(_query_howdoi, batches[0]): batches[0]} if batches else {}
+        # Submit Wikipedia queries
+        wiki_futures = {}
+        for b in batches[:3]:
+            fut = pool.submit(_query_wikipedia, b)
+            wiki_futures[fut] = ("Wikipedia", b)
+
+        # Submit StackOverflow query
+        so_futures = {}
+        if batches:
+            fut = pool.submit(_query_howdoi, batches[0])
+            so_futures[fut] = ("StackOverflow", batches[0])
 
         all_futures = {**wiki_futures, **so_futures}
         for future in concurrent.futures.as_completed(all_futures, timeout=timeout + 2):
+            source, query = all_futures[future]
             try:
                 r = future.result(timeout=timeout)
+                query_log.append({"source": source, "query": query, "result": r or "(no result)"})
                 if r:
                     results.append(r)
             except Exception:
-                pass
+                query_log.append({"source": source, "query": query, "result": "(timeout/error)"})
 
     if not results:
-        return ""
+        return {"batches": batches, "queries": query_log, "context": ""}
 
     context = " | ".join(results)
     # Cap at max_context_tokens (rough: 1 token ≈ 4 chars)
@@ -143,4 +161,5 @@ def enrich_context(code: str) -> str:
         context = context[:max_chars].rsplit(" ", 1)[0] + "…"
 
     log.debug(f"Context enrichment result: {len(context)} chars")
-    return context
+    return {"batches": batches, "queries": query_log, "context": context}
+

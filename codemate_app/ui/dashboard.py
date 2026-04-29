@@ -118,9 +118,7 @@ class DashboardWindow(QMainWindow):
         self.chk_startup = QCheckBox("Start at system startup")
         self.chk_minimize = QCheckBox("Minimize to tray on close")
         self.chk_minimize.setChecked(True)
-        self.chk_context = QCheckBox("Web context enrichment")
-        self.chk_context.setChecked(True)
-        for chk in [self.chk_startup, self.chk_minimize, self.chk_context]:
+        for chk in [self.chk_startup, self.chk_minimize]:
             s_layout.addWidget(chk)
         right_panel.addWidget(settings_frame)
 

@@ -11,6 +11,7 @@ import json
 import logging
 import sys
 import os
+from datetime import datetime
 from pathlib import Path
 
 # Ensure the app directory is on the Python path
@@ -43,6 +44,71 @@ logging.basicConfig(
 )
 log = logging.getLogger("CodeMate")
 
+# ── Pipeline log file ────────────────────────────────────────
+LOG_FILE = Path(app_dir) / "log.txt"
+
+
+def _write_pipeline_log(
+    input_code: str,
+    batches: list,
+    queries: list,
+    context: str,
+    final_prompt: str,
+    response: str,
+):
+    """Append a full pipeline entry to log.txt at the app root."""
+    sep = "=" * 72
+    timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+
+    lines = [
+        "",
+        sep,
+        f"  CODEMATE PIPELINE LOG — {timestamp}",
+        sep,
+        "",
+        "── INPUT RECEIVED ──────────────────────────────────────",
+        input_code,
+        "",
+        "── WEB CRAWLER — KEYWORD BATCHES ───────────────────────",
+    ]
+    if batches:
+        for i, b in enumerate(batches, 1):
+            lines.append(f"  Batch {i}: {b}")
+    else:
+        lines.append("  (no batches extracted)")
+
+    lines.append("")
+    lines.append("── WEB CRAWLER — QUERIES & RESPONSES ──────────────────")
+    if queries:
+        for q in queries:
+            lines.append(f"  [{q['source']}] Query: \"{q['query']}\"")
+            lines.append(f"           Result: {q['result']}")
+            lines.append("")
+    else:
+        lines.append("  (no queries executed)")
+
+    lines.append("── ASSEMBLED CONTEXT ───────────────────────────────────")
+    lines.append(context if context else "(empty — no context)")
+
+    lines.append("")
+    lines.append("── FINAL PROMPT ────────────────────────────────────────")
+    lines.append(final_prompt)
+
+    lines.append("")
+    lines.append("── INFERENCE RESPONSE ──────────────────────────────────")
+    lines.append(response)
+
+    lines.append("")
+    lines.append(sep)
+    lines.append("")
+
+    try:
+        with open(LOG_FILE, "a", encoding="utf-8") as f:
+            f.write("\n".join(lines))
+        log.info(f"Pipeline log written to {LOG_FILE}")
+    except Exception as e:
+        log.error(f"Failed to write pipeline log: {e}")
+
 
 class CodeMateApp:
     """Main application controller — orchestrates all components."""
@@ -55,6 +121,8 @@ class CodeMateApp:
 
         self.settings = self._load_settings()
         self._pending_code: str = ""
+        self._last_context_data: dict = {}   # structured context for logging
+        self._last_input_code: str = ""       # raw code input for logging
 
         # ── Core services ────────────────────────────────────
         self.engine = ModelEngine()
@@ -78,9 +146,6 @@ class CodeMateApp:
         )
         self.dashboard.chk_minimize.setChecked(
             self.settings.get("minimize_to_tray", True)
-        )
-        self.dashboard.chk_context.setChecked(
-            self.settings.get("context_enrichment", True)
         )
 
         # Override close event on dashboard
@@ -137,9 +202,6 @@ class CodeMateApp:
         self.dashboard.chk_minimize.toggled.connect(
             lambda v: self._update_setting("minimize_to_tray", v)
         )
-        self.dashboard.chk_context.toggled.connect(
-            lambda v: self._update_setting("context_enrichment", v)
-        )
 
     # ── Event handlers ───────────────────────────────────────
     def _on_model_loaded(self, status: str):
@@ -171,21 +233,22 @@ class CodeMateApp:
             return
         code = self._pending_code
         self._pending_code = ""
+        self._last_input_code = code
         self.bubble.set_loading(True)
 
-        # Context enrichment (runs in background via threadpool)
-        context = ""
-        if self.settings.get("context_enrichment", True):
-            try:
-                context = enrich_context(code)
-                if context:
-                    self.dashboard.add_activity(
-                        f"Context enriched: {len(context)} chars"
-                    )
-            except Exception as e:
-                log.warning(f"Context enrichment failed: {e}")
+        # Context enrichment — always enabled
+        context_data = {"batches": [], "queries": [], "context": ""}
+        try:
+            context_data = enrich_context(code)
+            if context_data["context"]:
+                self.dashboard.add_activity(
+                    f"Context enriched: {len(context_data['context'])} chars"
+                )
+        except Exception as e:
+            log.warning(f"Context enrichment failed: {e}")
 
-        self.engine.generate_async(code, context)
+        self._last_context_data = context_data
+        self.engine.generate_async(code, context_data["context"])
 
     def _on_inference_start(self):
         self.dashboard.add_activity("⏳ Inference running…")
@@ -195,6 +258,16 @@ class CodeMateApp:
         self.response_popup.show_response(result)
         self.dashboard.add_activity(
             f"✅ Response: {result[:60].replace(chr(10), ' ')}…"
+        )
+
+        # ── Write full pipeline to log.txt ────────────────────
+        _write_pipeline_log(
+            input_code=self._last_input_code,
+            batches=self._last_context_data.get("batches", []),
+            queries=self._last_context_data.get("queries", []),
+            context=self._last_context_data.get("context", ""),
+            final_prompt=getattr(self.engine, "last_prompt", "(unavailable)"),
+            response=result,
         )
 
     def _on_inference_error(self, err: str):

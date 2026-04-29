@@ -70,7 +70,8 @@ Once the model finishes loading, the status dot turns **green** and you're ready
 |---|---|
 | **Start at system startup** | Adds CodeMate to Windows startup so it launches automatically when you log in. |
 | **Minimize to tray on close** | Closing the dashboard hides it instead of quitting. The app stays active in the background. |
-| **Web context enrichment** | Toggles the Wikipedia/StackOverflow context lookup. Disable if you're offline or want faster responses. |
+
+> **Note:** Web context enrichment (Wikipedia + StackOverflow lookups) is **always enabled** — every inference automatically searches for relevant context to help the model produce better results.
 
 ---
 
@@ -595,7 +596,7 @@ The Dashboard is the main window that appears when you launch CodeMate. It shows
 | **Gauge Row** | Four animated circular gauges — GPU utilization %, VRAM usage %, CPU %, RAM % |
 | **Stat Cards** | GPU name, driver version, VRAM total, model status, compute backend (CUDA/ROCm/CPU), GPU temperature |
 | **Activity Log** | Scrollable timeline of everything CodeMate does — clipboard detections, context lookups, inference runs, results |
-| **Settings** | Three toggle checkboxes — Startup, Minimize-to-tray, Context enrichment |
+| **Settings** | Two toggle checkboxes — Startup, Minimize-to-tray |
 
 All gauges animate smoothly — values glide to their new position rather than jumping.
 
@@ -663,6 +664,66 @@ All queries have a **5-second timeout**. If they fail or return nothing, the mod
 ### Context Capping
 
 The assembled context is capped at **~300 tokens** (~1,200 characters). This keeps the context concise and avoids overwhelming the actual code in the prompt. The model's attention should be on *your code*, not a wall of Wikipedia text.
+
+---
+
+## Pipeline Logging (`log.txt`)
+
+Every time CodeMate processes a snippet, a detailed log entry is appended to **`log.txt`** in the application root directory (`codemate_app/log.txt`). This file is a permanent record of every pipeline run.
+
+Each entry contains:
+
+```
+========================================================================
+  CODEMATE PIPELINE LOG — 2026-04-30 03:45:12
+========================================================================
+
+── INPUT RECEIVED ──────────────────────────────────────
+def factorial(n):
+    if n == 0:
+        return 1
+    return n * factorial(n)
+
+RecursionError: maximum recursion depth exceeded
+
+── WEB CRAWLER — KEYWORD BATCHES ───────────────────────
+  Batch 1: factorial RecursionError maximum recursion
+
+── WEB CRAWLER — QUERIES & RESPONSES ──────────────────
+  [Wikipedia] Query: "factorial RecursionError maximum recursion"
+           Result: [Wiki:Recursion] Recursion occurs when the definition of...
+
+  [StackOverflow] Query: "factorial RecursionError maximum recursion"
+           Result: [SO] The recursive call should decrement n...
+
+── ASSEMBLED CONTEXT ───────────────────────────────────
+[Wiki:Recursion] Recursion occurs when... | [SO] The recursive call...
+
+── FINAL PROMPT ────────────────────────────────────────
+<|im_start|>system
+You are CodeMate, an AI code assistant...<|im_end|>
+<|im_start|>user
+<CODE>
+def factorial(n):
+    ...
+</CODE>
+
+CONTEXT: [Wiki:Recursion] ...<|im_end|>
+<|im_start|>assistant
+
+── INFERENCE RESPONSE ──────────────────────────────────
+**Bug Found: Infinite Recursion**
+The recursive call factorial(n) never decrements n...
+
+========================================================================
+```
+
+This log is useful for:
+- **Debugging** — see exactly what the model received and produced
+- **Auditing** — verify context enrichment is finding relevant information
+- **Training data** — collect real-world input/output pairs for future fine-tuning
+
+The file grows over time. Delete or archive it whenever you like.
 
 ---
 

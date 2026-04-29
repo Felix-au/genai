@@ -45,7 +45,6 @@ SYSTEM_PROMPT = (
 
 # ── Context Enrichment ───────────────────────────────────────
 CONTEXT_CONFIG = {
-    "enabled": True,
     "max_context_tokens": 300,          # keep context concise
     "wikipedia_sentences": 2,           # sentences per wiki hit
     "howdoi_max_results": 1,
@@ -75,5 +74,4 @@ UI_CONFIG = {
 DEFAULT_SETTINGS = {
     "start_at_startup": False,
     "minimize_to_tray": True,
-    "context_enrichment": True,
 }
