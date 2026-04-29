@@ -66,7 +66,7 @@ class DashboardWindow(QMainWindow):
         self._card_driver = StatCard("📦", "Driver")
         self._card_vram = StatCard("💾", "VRAM")
         self._card_model = StatCard("🤖", "Model Status")
-        self._card_backend = StatCard("⚡", "Compute")
+        self._card_backend = StatCard("⚡", "Mode")
         self._card_temp = StatCard("🌡️", "GPU Temp")
         cards_layout.addWidget(self._card_gpu, 0, 0)
         cards_layout.addWidget(self._card_driver, 0, 1)
@@ -167,15 +167,12 @@ class DashboardWindow(QMainWindow):
         self._cpu_gauge.setValue(stats.cpu_percent)
         self._ram_gauge.setValue(stats.ram_percent)
 
-        self._card_gpu.set_value(stats.gpu_name if stats.gpu_name != "N/A" else "No GPU")
+        self._card_gpu.set_value(stats.gpu_name)
         self._card_driver.set_value(stats.gpu_driver)
         self._card_vram.set_value(
             f"{stats.gpu_mem_used_mb} / {stats.gpu_mem_total_mb} MB"
-            if stats.gpu_mem_total_mb else "N/A"
         )
-        self._card_temp.set_value(
-            f"{stats.gpu_temp_c:.0f}°C" if stats.gpu_temp_c else "N/A"
-        )
+        self._card_temp.set_value(f"{stats.gpu_temp_c:.0f}°C")
 
     def set_model_status(self, status: str, color: str = COLORS["text_secondary"]):
         self._status_label.setText(status)
@@ -184,8 +181,8 @@ class DashboardWindow(QMainWindow):
     def set_status_color(self, color: str):
         self._status_dot.setStyleSheet(f"color: {color}; font-size: 18px;")
 
-    def set_backend_info(self, backend: str):
-        self._card_backend.set_value(backend.upper())
+    def set_backend_info(self, mode: str):
+        self._card_backend.set_value(mode)
 
     def add_activity(self, message: str):
         timestamp = datetime.now().strftime("%H:%M:%S")

@@ -19,7 +19,7 @@ app_dir = str(Path(__file__).resolve().parent)
 if app_dir not in sys.path:
     sys.path.insert(0, app_dir)
 
-from PySide6.QtCore import Qt, QTimer, QProcess
+from PySide6.QtCore import Qt, QTimer, QProcess, QThread, Signal
 from PySide6.QtWidgets import QApplication, QMessageBox
 from PySide6.QtGui import QCloseEvent
 
@@ -111,6 +111,23 @@ def _write_pipeline_log(
         log.error(f"Failed to write pipeline log: {e}")
 
 
+class _ContextThread(QThread):
+    """Runs context enrichment in a background thread so the UI stays responsive."""
+    finished_signal = Signal(dict)
+
+    def __init__(self, code: str):
+        super().__init__()
+        self._code = code
+
+    def run(self):
+        context_data = {"batches": [], "queries": [], "context": ""}
+        try:
+            context_data = enrich_context(self._code)
+        except Exception as e:
+            log.warning(f"Context enrichment failed: {e}")
+        self.finished_signal.emit(context_data)
+
+
 class CodeMateApp:
     """Main application controller — orchestrates all components."""
 
@@ -131,6 +148,7 @@ class CodeMateApp:
         self.sys_monitor = SystemMonitor(
             interval_ms=UI_CONFIG["stats_refresh_ms"]
         )
+        self.sys_monitor.force_cpu = self.settings.get("force_cpu", False)
 
         # ── UI components ────────────────────────────────────
         self.dashboard = DashboardWindow()
@@ -272,8 +290,11 @@ class CodeMateApp:
         self.dashboard.set_model_status(status)
         self.dashboard.set_status_color(COLORS["accent_green"])
         self.dashboard.add_activity(f"Model ready: {status}")
-        if self.engine.gpu_info:
-            self.dashboard.set_backend_info(self.engine.gpu_info.compute_backend)
+        # Set mode label
+        if self.engine.force_cpu:
+            self.dashboard.set_backend_info("CPU")
+        else:
+            self.dashboard.set_backend_info("GPU")
 
     def _on_model_error(self, err: str):
         log.error(f"Model error: {err}")
@@ -299,24 +320,29 @@ class CodeMateApp:
         self._last_input_code = code
         self.bubble.set_loading(True)
 
-        # Context enrichment — always enabled
-        context_data = {"batches": [], "queries": [], "context": ""}
-        try:
-            context_data = enrich_context(code)
-            if context_data["context"]:
-                self.dashboard.add_activity(
-                    f"Context enriched: {len(context_data['context'])} chars"
-                )
-        except Exception as e:
-            log.warning(f"Context enrichment failed: {e}")
+        # Run context enrichment in a background thread so the
+        # bubble spinner animation keeps running during web requests.
+        self._context_thread = _ContextThread(code)
+        self._context_thread.finished_signal.connect(self._on_context_ready)
+        self._context_thread.start()
 
+    def _on_context_ready(self, context_data: dict):
+        """Context enrichment done — fire inference."""
+        if context_data.get("context"):
+            self.dashboard.add_activity(
+                f"Context enriched: {len(context_data['context'])} chars"
+            )
         self._last_context_data = context_data
-        self.engine.generate_async(code, context_data["context"])
+        self.engine.generate_async(
+            self._last_input_code, context_data.get("context", "")
+        )
 
     def _on_inference_start(self):
+        self.sys_monitor.set_inferring(True)
         self.dashboard.add_activity("⏳ Inference running…")
 
     def _on_inference_done(self, result: str):
+        self.sys_monitor.set_inferring(False)
         self.bubble.set_loading(False)
         self.response_popup.show_response(result)
         self.dashboard.add_activity(
@@ -334,6 +360,7 @@ class CodeMateApp:
         )
 
     def _on_inference_error(self, err: str):
+        self.sys_monitor.set_inferring(False)
         self.bubble.set_loading(False)
         self.dashboard.add_activity(f"❌ Inference error: {err[:80]}")
 

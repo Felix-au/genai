@@ -3,10 +3,11 @@
 ║           CodeMate — System & GPU Monitor                    ║
 ╚══════════════════════════════════════════════════════════════╝
 Periodic system stats collection for the dashboard.
+When no NVIDIA GPU is detected, shows simulated cosmetic values.
 """
 
 from __future__ import annotations
-import logging, time
+import logging, time, random
 from dataclasses import dataclass
 from PySide6.QtCore import QThread, Signal
 
@@ -36,9 +37,15 @@ class SystemMonitor(QThread):
         self._interval = interval_ms / 1000.0
         self._has_nvidia = False
         self._nvml_handle = None
+        self._inferring = False  # set True during inference for gauge spikes
+        self.force_cpu = False   # set True to suppress GPU inference spikes
 
     def stop(self):
         self._running = False
+
+    def set_inferring(self, active: bool):
+        """Called by main app to signal inference is running."""
+        self._inferring = active
 
     def run(self):
         import psutil
@@ -96,5 +103,22 @@ class SystemMonitor(QThread):
                 stats.gpu_name = name
             except Exception as e:
                 log.debug(f"NVIDIA stats error: {e}")
+        else:
+            # ── Simulated cosmetic values when no GPU detected ──
+            stats.gpu_name = "AMD Integrated"
+            stats.gpu_driver = "Custom Vulkan"
+            stats.gpu_mem_total_mb = 2048   # 2 GB
+            stats.gpu_temp_c = random.uniform(30.0, 60.0)
+
+            if self._inferring and not self.force_cpu:
+                # Spike during inference for visual effect
+                stats.gpu_util_percent = random.uniform(60.0, 85.0)
+                stats.gpu_mem_percent = random.uniform(60.0, 85.0)
+                stats.gpu_mem_used_mb = int(stats.gpu_mem_total_mb * stats.gpu_mem_percent / 100)
+            else:
+                # Idle fluctuation
+                stats.gpu_util_percent = random.uniform(5.0, 15.0)
+                stats.gpu_mem_percent = random.uniform(5.0, 15.0)
+                stats.gpu_mem_used_mb = int(stats.gpu_mem_total_mb * stats.gpu_mem_percent / 100)
 
         return stats
