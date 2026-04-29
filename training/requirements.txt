@@ -1,0 +1,22 @@
+# Colab T4 requirements for CodeMate training
+# Install with: pip install -r requirements.txt
+
+torch>=2.1.0
+transformers>=4.40.0
+peft>=0.10.0
+bitsandbytes>=0.43.0
+trl>=0.8.0
+datasets>=2.18.0
+accelerate>=0.30.0
+sentencepiece
+protobuf
+scipy
+
+# Evaluation
+sacrebleu
+rouge-score
+codebleu
+google-generativeai
+
+# Data prep
+tqdm
