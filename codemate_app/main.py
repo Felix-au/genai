@@ -1,0 +1,265 @@
+"""
+╔══════════════════════════════════════════════════════════════╗
+║              CodeMate — Application Entry Point              ║
+╚══════════════════════════════════════════════════════════════╝
+Wires all core services and UI together. Single-instance.
+"""
+
+from __future__ import annotations
+
+import json
+import logging
+import sys
+import os
+from pathlib import Path
+
+# Ensure the app directory is on the Python path
+app_dir = str(Path(__file__).resolve().parent)
+if app_dir not in sys.path:
+    sys.path.insert(0, app_dir)
+
+from PySide6.QtCore import Qt, QTimer
+from PySide6.QtWidgets import QApplication
+from PySide6.QtGui import QCloseEvent
+
+from config import (
+    UI_CONFIG, DEFAULT_SETTINGS, SETTINGS_FILE, CONTEXT_CONFIG
+)
+from core.model_engine import ModelEngine
+from core.clipboard_monitor import ClipboardMonitor
+from core.context_enricher import enrich_context
+from core.system_monitor import SystemMonitor
+from core import startup_manager
+from ui.theme import get_global_stylesheet, COLORS
+from ui.dashboard import DashboardWindow
+from ui.floating_bubble import FloatingBubble
+from ui.response_popup import ResponsePopup
+from ui.tray_icon import TrayIcon
+
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s [%(name)s] %(levelname)s: %(message)s",
+    datefmt="%H:%M:%S",
+)
+log = logging.getLogger("CodeMate")
+
+
+class CodeMateApp:
+    """Main application controller — orchestrates all components."""
+
+    def __init__(self):
+        self.app = QApplication(sys.argv)
+        self.app.setApplicationName(UI_CONFIG["app_name"])
+        self.app.setQuitOnLastWindowClosed(False)
+        self.app.setStyleSheet(get_global_stylesheet())
+
+        self.settings = self._load_settings()
+        self._pending_code: str = ""
+
+        # ── Core services ────────────────────────────────────
+        self.engine = ModelEngine()
+        self.clipboard = ClipboardMonitor()
+        self.sys_monitor = SystemMonitor(
+            interval_ms=UI_CONFIG["stats_refresh_ms"]
+        )
+
+        # ── UI components ────────────────────────────────────
+        self.dashboard = DashboardWindow()
+        self.bubble = FloatingBubble()
+        self.response_popup = ResponsePopup()
+        self.tray = TrayIcon()
+
+        # ── Wire signals ─────────────────────────────────────
+        self._connect_signals()
+
+        # ── Apply saved settings ─────────────────────────────
+        self.dashboard.chk_startup.setChecked(
+            self.settings.get("start_at_startup", False)
+        )
+        self.dashboard.chk_minimize.setChecked(
+            self.settings.get("minimize_to_tray", True)
+        )
+        self.dashboard.chk_context.setChecked(
+            self.settings.get("context_enrichment", True)
+        )
+
+        # Override close event on dashboard
+        self.dashboard.closeEvent = self._on_dashboard_close
+
+    def run(self) -> int:
+        """Start all services and enter event loop."""
+        log.info("Starting CodeMate …")
+
+        # Start background services
+        self.sys_monitor.start()
+        self.clipboard.start()
+
+        # Start model loading (async)
+        self.engine.load_async()
+
+        # Show dashboard and tray
+        self.dashboard.show()
+        self.tray.show()
+
+        self.dashboard.add_activity("CodeMate started")
+        self.dashboard.set_status_color(COLORS["accent_orange"])
+        self.dashboard.set_model_status("Loading model…")
+
+        return self.app.exec()
+
+    # ── Signal wiring ────────────────────────────────────────
+    def _connect_signals(self):
+        # Model engine
+        self.engine.signals.model_loaded.connect(self._on_model_loaded)
+        self.engine.signals.model_error.connect(self._on_model_error)
+        self.engine.signals.inference_started.connect(self._on_inference_start)
+        self.engine.signals.inference_finished.connect(self._on_inference_done)
+        self.engine.signals.inference_error.connect(self._on_inference_error)
+
+        # Clipboard
+        self.clipboard.code_copied.connect(self._on_code_copied)
+        self.clipboard.status_changed.connect(
+            lambda s: self.dashboard.add_activity(s)
+        )
+
+        # System monitor
+        self.sys_monitor.stats_updated.connect(self.dashboard.update_stats)
+
+        # Bubble
+        self.bubble.clicked.connect(self._on_bubble_clicked)
+
+        # Tray
+        self.tray.show_dashboard_requested.connect(self._show_dashboard)
+        self.tray.quit_requested.connect(self._quit)
+
+        # Settings checkboxes
+        self.dashboard.chk_startup.toggled.connect(self._on_startup_toggled)
+        self.dashboard.chk_minimize.toggled.connect(
+            lambda v: self._update_setting("minimize_to_tray", v)
+        )
+        self.dashboard.chk_context.toggled.connect(
+            lambda v: self._update_setting("context_enrichment", v)
+        )
+
+    # ── Event handlers ───────────────────────────────────────
+    def _on_model_loaded(self, status: str):
+        log.info(f"Model loaded: {status}")
+        self.dashboard.set_model_status(status)
+        self.dashboard.set_status_color(COLORS["accent_green"])
+        self.dashboard.add_activity(f"Model ready: {status}")
+        if self.engine.gpu_info:
+            self.dashboard.set_backend_info(self.engine.gpu_info.compute_backend)
+
+    def _on_model_error(self, err: str):
+        log.error(f"Model error: {err}")
+        self.dashboard.set_model_status(f"Error: {err[:60]}")
+        self.dashboard.set_status_color(COLORS["accent_red"])
+        self.dashboard.add_activity(f"⚠ Model error: {err[:80]}")
+
+    def _on_code_copied(self, code: str):
+        """Code detected in clipboard — show the bubble."""
+        if not self.engine.is_loaded:
+            return
+        self._pending_code = code
+        self.bubble.show_at_cursor()
+        snippet = code[:50].replace("\n", " ")
+        self.dashboard.add_activity(f"Code detected: {snippet}…")
+
+    def _on_bubble_clicked(self):
+        """User clicked the bubble — start inference pipeline."""
+        if not self._pending_code:
+            return
+        code = self._pending_code
+        self._pending_code = ""
+        self.bubble.set_loading(True)
+
+        # Context enrichment (runs in background via threadpool)
+        context = ""
+        if self.settings.get("context_enrichment", True):
+            try:
+                context = enrich_context(code)
+                if context:
+                    self.dashboard.add_activity(
+                        f"Context enriched: {len(context)} chars"
+                    )
+            except Exception as e:
+                log.warning(f"Context enrichment failed: {e}")
+
+        self.engine.generate_async(code, context)
+
+    def _on_inference_start(self):
+        self.dashboard.add_activity("⏳ Inference running…")
+
+    def _on_inference_done(self, result: str):
+        self.bubble.set_loading(False)
+        self.response_popup.show_response(result)
+        self.dashboard.add_activity(
+            f"✅ Response: {result[:60].replace(chr(10), ' ')}…"
+        )
+
+    def _on_inference_error(self, err: str):
+        self.bubble.set_loading(False)
+        self.dashboard.add_activity(f"❌ Inference error: {err[:80]}")
+
+    def _on_startup_toggled(self, enabled: bool):
+        if enabled:
+            startup_manager.enable_startup()
+        else:
+            startup_manager.disable_startup()
+        self._update_setting("start_at_startup", enabled)
+
+    # ── Dashboard close behavior ─────────────────────────────
+    def _on_dashboard_close(self, event: QCloseEvent):
+        if self.settings.get("minimize_to_tray", True):
+            event.ignore()
+            self.dashboard.hide()
+            self.tray.showMessage(
+                "CodeMate",
+                "Still running in the background. Double-click to reopen.",
+                TrayIcon.MessageIcon.Information,
+                2000,
+            )
+        else:
+            self._quit()
+
+    def _show_dashboard(self):
+        self.dashboard.show()
+        self.dashboard.raise_()
+        self.dashboard.activateWindow()
+
+    def _quit(self):
+        log.info("Shutting down …")
+        self.clipboard.stop()
+        self.sys_monitor.stop()
+        self._save_settings()
+        self.tray.hide()
+        self.app.quit()
+
+    # ── Settings persistence ─────────────────────────────────
+    def _load_settings(self) -> dict:
+        if SETTINGS_FILE.exists():
+            try:
+                return json.loads(SETTINGS_FILE.read_text())
+            except Exception:
+                pass
+        return dict(DEFAULT_SETTINGS)
+
+    def _save_settings(self):
+        try:
+            SETTINGS_FILE.write_text(json.dumps(self.settings, indent=2))
+        except Exception as e:
+            log.error(f"Failed to save settings: {e}")
+
+    def _update_setting(self, key: str, value):
+        self.settings[key] = value
+        self._save_settings()
+
+
+# ── Entry point ──────────────────────────────────────────────
+def main():
+    app = CodeMateApp()
+    sys.exit(app.run())
+
+
+if __name__ == "__main__":
+    main()
