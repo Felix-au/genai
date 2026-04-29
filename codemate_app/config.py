@@ -74,4 +74,5 @@ UI_CONFIG = {
 DEFAULT_SETTINGS = {
     "start_at_startup": False,
     "minimize_to_tray": True,
+    "force_cpu": False,
 }

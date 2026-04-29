@@ -87,13 +87,15 @@ class ModelEngine:
         self.model = None
         self.tokenizer = None
         self.is_loaded = False
+        self.force_cpu = False
         self._loader_thread: Optional[ModelLoaderThread] = None
         self._inference_thread: Optional[InferenceThread] = None
 
     # ── Public API ───────────────────────────────────────────
 
-    def load_async(self):
+    def load_async(self, force_cpu: bool = False):
         """Start loading model in background thread."""
+        self.force_cpu = force_cpu
         if self.is_loaded:
             self.signals.model_loaded.emit("Model already loaded")
             return
@@ -126,7 +128,11 @@ class ModelEngine:
         from transformers import AutoModelForCausalLM, AutoTokenizer
 
         log.info("Detecting GPU …")
-        self.gpu_info = detect_gpu()
+        if self.force_cpu:
+            log.info("⚠ Force CPU mode enabled — skipping GPU detection")
+            self.gpu_info = GPUInfo()  # defaults to cpu/none
+        else:
+            self.gpu_info = detect_gpu()
 
         base_model_id = MODEL_CONFIG["base_model_id"]
         adapter_path = MODEL_CONFIG["adapter_path"]

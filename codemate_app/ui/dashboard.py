@@ -118,7 +118,8 @@ class DashboardWindow(QMainWindow):
         self.chk_startup = QCheckBox("Start at system startup")
         self.chk_minimize = QCheckBox("Minimize to tray on close")
         self.chk_minimize.setChecked(True)
-        for chk in [self.chk_startup, self.chk_minimize]:
+        self.chk_force_cpu = QCheckBox("Force CPU only (requires restart)")
+        for chk in [self.chk_startup, self.chk_minimize, self.chk_force_cpu]:
             s_layout.addWidget(chk)
         right_panel.addWidget(settings_frame)
 

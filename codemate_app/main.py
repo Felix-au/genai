@@ -140,12 +140,14 @@ class CodeMateApp:
         # ── Wire signals ─────────────────────────────────────
         self._connect_signals()
 
-        # ── Apply saved settings ─────────────────────────────
         self.dashboard.chk_startup.setChecked(
             self.settings.get("start_at_startup", False)
         )
         self.dashboard.chk_minimize.setChecked(
             self.settings.get("minimize_to_tray", True)
+        )
+        self.dashboard.chk_force_cpu.setChecked(
+            self.settings.get("force_cpu", False)
         )
 
         # Override close event on dashboard
@@ -159,8 +161,10 @@ class CodeMateApp:
         self.sys_monitor.start()
         self.clipboard.start()
 
-        # Start model loading (async)
-        self.engine.load_async()
+        # Start model loading (async) — respect force_cpu setting
+        self.engine.load_async(
+            force_cpu=self.settings.get("force_cpu", False)
+        )
 
         # Show dashboard and tray
         self.dashboard.show()
@@ -201,6 +205,9 @@ class CodeMateApp:
         self.dashboard.chk_startup.toggled.connect(self._on_startup_toggled)
         self.dashboard.chk_minimize.toggled.connect(
             lambda v: self._update_setting("minimize_to_tray", v)
+        )
+        self.dashboard.chk_force_cpu.toggled.connect(
+            lambda v: self._update_setting("force_cpu", v)
         )
 
     # ── Event handlers ───────────────────────────────────────
