@@ -19,8 +19,8 @@ app_dir = str(Path(__file__).resolve().parent)
 if app_dir not in sys.path:
     sys.path.insert(0, app_dir)
 
-from PySide6.QtCore import Qt, QTimer
-from PySide6.QtWidgets import QApplication
+from PySide6.QtCore import Qt, QTimer, QProcess
+from PySide6.QtWidgets import QApplication, QMessageBox
 from PySide6.QtGui import QCloseEvent
 
 from config import (
@@ -146,9 +146,11 @@ class CodeMateApp:
         self.dashboard.chk_minimize.setChecked(
             self.settings.get("minimize_to_tray", True)
         )
+        self.dashboard.chk_force_cpu.blockSignals(True)
         self.dashboard.chk_force_cpu.setChecked(
             self.settings.get("force_cpu", False)
         )
+        self.dashboard.chk_force_cpu.blockSignals(False)
 
         # Override close event on dashboard
         self.dashboard.closeEvent = self._on_dashboard_close
@@ -207,10 +209,30 @@ class CodeMateApp:
             lambda v: self._update_setting("minimize_to_tray", v)
         )
         self.dashboard.chk_force_cpu.toggled.connect(
-            lambda v: self._update_setting("force_cpu", v)
+            self._on_force_cpu_toggled
         )
 
     # ── Event handlers ───────────────────────────────────────
+    def _on_force_cpu_toggled(self, enabled: bool):
+        """Prompt user for restart when toggling CPU-only mode."""
+        mode = "CPU-only" if enabled else "GPU-accelerated"
+        reply = QMessageBox.question(
+            self.dashboard,
+            "Restart Required",
+            f"Switching to {mode} mode requires a restart.\n\n"
+            f"Restart CodeMate now?",
+            QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No,
+            QMessageBox.StandardButton.Yes,
+        )
+        if reply == QMessageBox.StandardButton.Yes:
+            self._update_setting("force_cpu", enabled)
+            self._restart()
+        else:
+            # Revert checkbox without re-triggering the signal
+            self.dashboard.chk_force_cpu.blockSignals(True)
+            self.dashboard.chk_force_cpu.setChecked(not enabled)
+            self.dashboard.chk_force_cpu.blockSignals(False)
+
     def _on_model_loaded(self, status: str):
         log.info(f"Model loaded: {status}")
         self.dashboard.set_model_status(status)
@@ -313,6 +335,16 @@ class CodeMateApp:
         self.sys_monitor.stop()
         self._save_settings()
         self.tray.hide()
+        self.app.quit()
+
+    def _restart(self):
+        """Save settings, shut down services, and relaunch the app."""
+        log.info("Restarting CodeMate …")
+        self.clipboard.stop()
+        self.sys_monitor.stop()
+        self._save_settings()
+        self.tray.hide()
+        QProcess.startDetached(sys.executable, sys.argv)
         self.app.quit()
 
     # ── Settings persistence ─────────────────────────────────
