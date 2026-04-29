@@ -112,9 +112,22 @@ class DashboardWindow(QMainWindow):
         s_layout = QVBoxLayout(settings_frame)
         s_layout.setContentsMargins(16, 12, 16, 12)
         s_layout.setSpacing(10)
-        s_label = QLabel("⚙️ Settings")
-        s_label.setStyleSheet(f"font-weight: {FONTS['weight_bold']}; color: {COLORS['text_secondary']};")
-        s_layout.addWidget(s_label)
+        self.btn_settings_header = QPushButton("⚙️ Settings")
+        self.btn_settings_header.setCursor(Qt.CursorShape.PointingHandCursor)
+        self.btn_settings_header.setStyleSheet(f"""
+            QPushButton {{
+                font-weight: {FONTS['weight_bold']};
+                color: {COLORS['text_secondary']};
+                background: transparent;
+                border: none;
+                text-align: left;
+                padding: 0;
+            }}
+            QPushButton:hover {{
+                color: {COLORS['accent_cyan']};
+            }}
+        """)
+        s_layout.addWidget(self.btn_settings_header)
 
         self.chk_startup = QCheckBox("Start at system startup")
         self.chk_minimize = QCheckBox("Minimize to tray on close")
@@ -122,27 +135,6 @@ class DashboardWindow(QMainWindow):
         self.chk_force_cpu = QCheckBox("Force CPU only (requires restart)")
         for chk in [self.chk_startup, self.chk_minimize, self.chk_force_cpu]:
             s_layout.addWidget(chk)
-
-        # Gear button for advanced settings
-        self.btn_advanced = QPushButton("⚙️  Advanced Settings")
-        self.btn_advanced.setCursor(Qt.CursorShape.PointingHandCursor)
-        self.btn_advanced.setStyleSheet(f"""
-            QPushButton {{
-                background: {COLORS['bg_secondary']};
-                border: 1px solid {COLORS['border']};
-                border-radius: {DIMS['radius_sm']};
-                padding: 8px 12px;
-                color: {COLORS['text_secondary']};
-                font-size: {FONTS['size_xs']};
-                text-align: left;
-            }}
-            QPushButton:hover {{
-                background: {COLORS['bg_card']};
-                border-color: {COLORS['accent_cyan']};
-                color: {COLORS['text_primary']};
-            }}
-        """)
-        s_layout.addWidget(self.btn_advanced)
         right_panel.addWidget(settings_frame)
 
         content.addLayout(right_panel, stretch=1)

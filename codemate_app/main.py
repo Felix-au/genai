@@ -215,8 +215,8 @@ class CodeMateApp:
             self._on_force_cpu_toggled
         )
 
-        # Advanced settings gear button
-        self.dashboard.btn_advanced.clicked.connect(
+        # Settings header opens advanced settings dialog
+        self.dashboard.btn_settings_header.clicked.connect(
             self._on_advanced_settings
         )
 
