@@ -59,6 +59,13 @@ CONTEXT_CONFIG = {
     },
 }
 
+# ── API Backend (hidden from user) ───────────────────────────
+API_CONFIG = {
+    "model": "gemini-2.5-flash",
+    "max_tokens": 512,
+    "temperature": 0.3,
+}
+
 # ── UI ───────────────────────────────────────────────────────
 UI_CONFIG = {
     "app_name": "CodeMate",
@@ -75,4 +82,6 @@ DEFAULT_SETTINGS = {
     "start_at_startup": False,
     "minimize_to_tray": True,
     "force_cpu": False,
+    "api_mode": False,
+    "api_key": "",
 }

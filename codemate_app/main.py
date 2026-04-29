@@ -36,6 +36,7 @@ from ui.dashboard import DashboardWindow
 from ui.floating_bubble import FloatingBubble
 from ui.response_popup import ResponsePopup
 from ui.tray_icon import TrayIcon
+from ui.settings_dialog import SettingsDialog
 
 logging.basicConfig(
     level=logging.INFO,
@@ -163,9 +164,11 @@ class CodeMateApp:
         self.sys_monitor.start()
         self.clipboard.start()
 
-        # Start model loading (async) — respect force_cpu setting
+        # Start model loading (async) — respect force_cpu and api_mode
         self.engine.load_async(
-            force_cpu=self.settings.get("force_cpu", False)
+            force_cpu=self.settings.get("force_cpu", False),
+            api_mode=self.settings.get("api_mode", False),
+            api_key=self.settings.get("api_key", ""),
         )
 
         # Show dashboard and tray
@@ -212,6 +215,11 @@ class CodeMateApp:
             self._on_force_cpu_toggled
         )
 
+        # Advanced settings gear button
+        self.dashboard.btn_advanced.clicked.connect(
+            self._on_advanced_settings
+        )
+
     # ── Event handlers ───────────────────────────────────────
     def _on_force_cpu_toggled(self, enabled: bool):
         """Prompt user for restart when toggling CPU-only mode."""
@@ -232,6 +240,32 @@ class CodeMateApp:
             self.dashboard.chk_force_cpu.blockSignals(True)
             self.dashboard.chk_force_cpu.setChecked(not enabled)
             self.dashboard.chk_force_cpu.blockSignals(False)
+
+    def _on_advanced_settings(self):
+        """Open the advanced settings dialog (API mode)."""
+        old_api_mode = self.settings.get("api_mode", False)
+        dlg = SettingsDialog(self.settings, parent=self.dashboard)
+        if dlg.exec():
+            new_settings = dlg.get_settings()
+            # Persist all changes
+            for k, v in new_settings.items():
+                self.settings[k] = v
+            self._save_settings()
+
+            # If api_mode changed, prompt restart
+            new_api_mode = self.settings.get("api_mode", False)
+            if new_api_mode != old_api_mode:
+                mode = "API" if new_api_mode else "local model"
+                reply = QMessageBox.question(
+                    self.dashboard,
+                    "Restart Required",
+                    f"Switching to {mode} mode requires a restart.\n\n"
+                    f"Restart CodeMate now?",
+                    QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No,
+                    QMessageBox.StandardButton.Yes,
+                )
+                if reply == QMessageBox.StandardButton.Yes:
+                    self._restart()
 
     def _on_model_loaded(self, status: str):
         log.info(f"Model loaded: {status}")

@@ -25,8 +25,10 @@ class FloatingBubble(QWidget):
 
     def __init__(self, parent=None):
         super().__init__(parent)
-        size = UI_CONFIG["bubble_size"]
-        self.setFixedSize(size, size)
+        self._base_size = UI_CONFIG["bubble_size"]
+        self._margin = 30  # extra space for glow/shadow
+        full = self._base_size + self._margin * 2
+        self.setFixedSize(full, full)
         self.setWindowFlags(
             Qt.WindowType.FramelessWindowHint
             | Qt.WindowType.WindowStaysOnTopHint
@@ -86,7 +88,8 @@ class FloatingBubble(QWidget):
             y = max(y, geo.top())
         else:
             x, y = pos.x() + 20, pos.y() - self.height() - 10
-        self.move(x, y)
+        # Offset by margin so the visible circle is at the intended position
+        self.move(x - self._margin, y - self._margin)
         self._is_loading = False
         self._spin_timer.stop()
         self.show()
@@ -109,9 +112,10 @@ class FloatingBubble(QWidget):
     def paintEvent(self, event):
         painter = QPainter(self)
         painter.setRenderHint(QPainter.RenderHint.Antialiasing)
-        w, h = self.width(), self.height()
-        cx, cy = w / 2, h / 2
-        r = min(w, h) / 2 - 4
+        m = self._margin
+        s = self._base_size
+        cx, cy = m + s / 2, m + s / 2
+        r = s / 2 - 4
 
         # Outer glow pulse
         glow_alpha = int(40 + 30 * self._pulse)
@@ -147,11 +151,22 @@ class FloatingBubble(QWidget):
             painter.setPen(QColor("#FFFFFF"))
             font = QFont("Consolas", 14, QFont.Weight.Bold)
             painter.setFont(font)
-            painter.drawText(self.rect(), Qt.AlignmentFlag.AlignCenter, "</>")
+            painter.drawText(
+                int(cx - r), int(cy - r), int(r * 2), int(r * 2),
+                Qt.AlignmentFlag.AlignCenter, "</>")
 
         painter.end()
 
     def mousePressEvent(self, event):
+        # Only respond to clicks inside the visible circle
+        m = self._margin
+        s = self._base_size
+        cx, cy = m + s / 2, m + s / 2
+        dx = event.position().x() - cx
+        dy = event.position().y() - cy
+        if dx * dx + dy * dy > (s / 2) ** 2:
+            event.ignore()
+            return
         if event.button() == Qt.MouseButton.LeftButton:
             self._hide_timer.stop()
             self.clicked.emit()

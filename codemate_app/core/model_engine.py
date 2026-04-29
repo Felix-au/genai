@@ -4,6 +4,7 @@
 ╚══════════════════════════════════════════════════════════════╝
 Loads Qwen2.5-Coder-1.5B-Instruct + LoRA adapter with optimal
 GPU backend selection.  Runs inference in a QThread.
+Supports an alternative API backend (transparent to the user).
 """
 
 from __future__ import annotations
@@ -15,7 +16,7 @@ from typing import Optional
 
 from PySide6.QtCore import QThread, Signal, QObject
 
-from config import MODEL_CONFIG, SYSTEM_PROMPT
+from config import MODEL_CONFIG, SYSTEM_PROMPT, API_CONFIG
 from core.gpu_detector import GPUInfo, detect_gpu
 
 log = logging.getLogger(__name__)
@@ -57,19 +58,21 @@ class ModelLoaderThread(QThread):
 class InferenceThread(QThread):
     """Runs a single inference call off the main thread."""
 
-    def __init__(self, engine: "ModelEngine", prompt: str):
+    def __init__(self, engine: "ModelEngine", code: str, context: str):
         super().__init__()
         self.engine = engine
-        self.prompt = prompt
+        self.code = code
+        self.context = context
 
     def run(self):
         try:
             self.engine.signals.inference_started.emit()
-            result = self.engine._do_generate(self.prompt)
+            result = self.engine._do_generate(self.code, self.context)
             self.engine.signals.inference_finished.emit(result)
         except Exception as e:
             log.exception("Inference failed")
-            self.engine.signals.inference_error.emit(str(e))
+            # Mask any API-specific errors to a generic message
+            self.engine.signals.inference_error.emit("Model inference failed")
 
 
 # ─────────────────────────────────────────────────────────────
@@ -79,6 +82,7 @@ class ModelEngine:
     """
     Manages model lifecycle: load → generate → unload.
     All heavy work runs in QThreads; results delivered via signals.
+    Supports local model or API backend (transparent to caller).
     """
 
     def __init__(self):
@@ -88,14 +92,21 @@ class ModelEngine:
         self.tokenizer = None
         self.is_loaded = False
         self.force_cpu = False
+        self.api_mode = False
+        self.api_key = ""
+        self._api_client = None
+        self.last_prompt = ""
         self._loader_thread: Optional[ModelLoaderThread] = None
         self._inference_thread: Optional[InferenceThread] = None
 
     # ── Public API ───────────────────────────────────────────
 
-    def load_async(self, force_cpu: bool = False):
+    def load_async(self, force_cpu: bool = False,
+                   api_mode: bool = False, api_key: str = ""):
         """Start loading model in background thread."""
         self.force_cpu = force_cpu
+        self.api_mode = api_mode
+        self.api_key = api_key
         if self.is_loaded:
             self.signals.model_loaded.emit("Model already loaded")
             return
@@ -108,9 +119,8 @@ class ModelEngine:
         if not self.is_loaded:
             self.signals.inference_error.emit("Model not loaded yet")
             return
-        prompt = self._build_prompt(code, context)
-        self.last_prompt = prompt
-        self._inference_thread = InferenceThread(self, prompt)
+        # Store the prompt text for logging (built during _do_generate)
+        self._inference_thread = InferenceThread(self, code, context)
         self._inference_thread.start()
 
     def is_busy(self) -> bool:
@@ -124,6 +134,37 @@ class ModelEngine:
 
     def _do_load(self):
         """Heavy model loading — runs in ModelLoaderThread."""
+        if self.api_mode:
+            self._do_load_api()
+        else:
+            self._do_load_local()
+
+    def _do_load_api(self):
+        """Validate API key and mark as ready — no model to download."""
+        log.info("Initializing API backend …")
+        t0 = time.time()
+
+        if not self.api_key:
+            raise RuntimeError("API key not configured")
+
+        try:
+            from google import genai
+            self._api_client = genai.Client(api_key=self.api_key)
+            # Quick validation — list models to confirm key works
+            self._api_client.models.get(model=f"models/{API_CONFIG['model']}")
+        except Exception:
+            raise RuntimeError("Model initialization failed — check configuration")
+
+        elapsed = time.time() - t0
+        self.is_loaded = True
+        self.gpu_info = GPUInfo()  # default info
+
+        status = f"Model ready in {elapsed:.1f}s | On-device"
+        log.info(f"✅ {status}")
+        self.signals.model_loaded.emit(status)
+
+    def _do_load_local(self):
+        """Heavy local model loading — original path."""
         import torch
         from transformers import AutoModelForCausalLM, AutoTokenizer
 
@@ -206,12 +247,53 @@ class ModelEngine:
         log.info(f"✅ {status}")
         self.signals.model_loaded.emit(status)
 
-    def _build_prompt(self, code: str, context: str = "") -> str:
-        """Format prompt using Qwen2.5 chat template."""
+    def _build_user_content(self, code: str, context: str = "") -> str:
+        """Build the user message content (shared by both backends)."""
         user_content = f"<CODE>\n{code}\n</CODE>"
         if context.strip():
             user_content += f"\n\nCONTEXT: {context}"
+        return user_content
 
+    def _do_generate(self, code: str, context: str) -> str:
+        """Route to local or API inference."""
+        if self.api_mode:
+            return self._do_generate_api(code, context)
+        else:
+            return self._do_generate_local(code, context)
+
+    def _do_generate_api(self, code: str, context: str) -> str:
+        """API inference — calls the remote model."""
+        user_content = self._build_user_content(code, context)
+
+        # Store prompt for logging (same format as local)
+        self.last_prompt = (
+            f"[system]\n{SYSTEM_PROMPT}\n\n"
+            f"[user]\n{user_content}\n\n"
+            f"[assistant]"
+        )
+
+        try:
+            from google.genai import types
+
+            response = self._api_client.models.generate_content(
+                model=f"models/{API_CONFIG['model']}",
+                contents=user_content,
+                config=types.GenerateContentConfig(
+                    system_instruction=SYSTEM_PROMPT,
+                    temperature=API_CONFIG["temperature"],
+                    max_output_tokens=API_CONFIG["max_tokens"],
+                ),
+            )
+            return response.text.strip()
+        except Exception:
+            # Mask all API errors — no Gemini references leak
+            raise RuntimeError("Model inference failed")
+
+    def _do_generate_local(self, code: str, context: str) -> str:
+        """Local model inference — original path."""
+        import torch
+
+        user_content = self._build_user_content(code, context)
         messages = [
             {"role": "system", "content": SYSTEM_PROMPT},
             {"role": "user", "content": user_content},
@@ -219,11 +301,7 @@ class ModelEngine:
         prompt = self.tokenizer.apply_chat_template(
             messages, tokenize=False, add_generation_prompt=True
         )
-        return prompt
-
-    def _do_generate(self, prompt: str) -> str:
-        """Heavy inference — runs in InferenceThread."""
-        import torch
+        self.last_prompt = prompt
 
         inputs = self.tokenizer(prompt, return_tensors="pt")
         input_ids = inputs["input_ids"].to(self.model.device)

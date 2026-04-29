@@ -11,6 +11,7 @@ from PySide6.QtGui import QFont, QColor
 from PySide6.QtWidgets import (
     QMainWindow, QWidget, QVBoxLayout, QHBoxLayout, QGridLayout,
     QLabel, QCheckBox, QScrollArea, QFrame, QGraphicsDropShadowEffect,
+    QPushButton,
 )
 from ui.theme import COLORS, FONTS, DIMS, card_style
 from ui.widgets.gauge_widget import GaugeWidget
@@ -121,6 +122,27 @@ class DashboardWindow(QMainWindow):
         self.chk_force_cpu = QCheckBox("Force CPU only (requires restart)")
         for chk in [self.chk_startup, self.chk_minimize, self.chk_force_cpu]:
             s_layout.addWidget(chk)
+
+        # Gear button for advanced settings
+        self.btn_advanced = QPushButton("⚙️  Advanced Settings")
+        self.btn_advanced.setCursor(Qt.CursorShape.PointingHandCursor)
+        self.btn_advanced.setStyleSheet(f"""
+            QPushButton {{
+                background: {COLORS['bg_secondary']};
+                border: 1px solid {COLORS['border']};
+                border-radius: {DIMS['radius_sm']};
+                padding: 8px 12px;
+                color: {COLORS['text_secondary']};
+                font-size: {FONTS['size_xs']};
+                text-align: left;
+            }}
+            QPushButton:hover {{
+                background: {COLORS['bg_card']};
+                border-color: {COLORS['accent_cyan']};
+                color: {COLORS['text_primary']};
+            }}
+        """)
+        s_layout.addWidget(self.btn_advanced)
         right_panel.addWidget(settings_frame)
 
         content.addLayout(right_panel, stretch=1)

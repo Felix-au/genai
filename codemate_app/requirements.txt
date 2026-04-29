@@ -12,4 +12,5 @@ wikipedia>=1.4.0
 howdoi>=2.0.0
 pyperclip>=1.8.0
 platformdirs>=4.0.0
+google-genai>=1.0.0
 pyinstaller>=6.0.0
