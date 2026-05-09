@@ -152,8 +152,8 @@ class ModelEngine:
             self._api_client = genai.Client(api_key=self.api_key)
             # Quick validation — list models to confirm key works
             self._api_client.models.get(model=f"models/{API_CONFIG['model']}")
-        except Exception:
-            raise RuntimeError("Model initialization failed — check configuration")
+        except Exception as e:
+            raise RuntimeError(f"Model initialization failed: {e}")
 
         elapsed = time.time() - t0
         self.is_loaded = True
