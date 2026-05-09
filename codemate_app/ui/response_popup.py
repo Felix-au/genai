@@ -5,11 +5,10 @@ Frameless popup that displays inference results with syntax highlighting.
 
 from __future__ import annotations
 import logging
-from PySide6.QtCore import Qt, QPoint, QPropertyAnimation, QEasingCurve
+from PySide6.QtCore import Qt, QPoint, QPropertyAnimation, QEasingCurve, QTimer
 from PySide6.QtGui import QCursor, QFont, QColor
 from PySide6.QtWidgets import (QWidget, QVBoxLayout, QHBoxLayout, QLabel,
-                                QPushButton, QTextEdit, QApplication,
-                                QGraphicsDropShadowEffect, QGraphicsOpacityEffect)
+                                QPushButton, QTextEdit, QApplication)
 from ui.theme import COLORS, FONTS, DIMS
 
 log = logging.getLogger(__name__)
@@ -30,7 +29,9 @@ class ResponsePopup(QWidget):
         self.setMaximumSize(700, 550)
         self._drag_pos = None
 
-        # Container
+        # Container — use a bright border for a glow effect instead of
+        # QGraphicsDropShadowEffect which causes UpdateLayeredWindowIndirect
+        # errors on frameless translucent windows.
         self._container = QWidget(self)
         self._container.setStyleSheet(f"""
             QWidget {{
@@ -39,12 +40,6 @@ class ResponsePopup(QWidget):
                 border-radius: {DIMS['radius_xl']};
             }}
         """)
-
-        shadow = QGraphicsDropShadowEffect(self)
-        shadow.setBlurRadius(40)
-        shadow.setColor(QColor(0, 212, 255, 60))
-        shadow.setOffset(0, 8)
-        self._container.setGraphicsEffect(shadow)
 
         main_layout = QVBoxLayout(self)
         main_layout.setContentsMargins(8, 8, 8, 8)
@@ -66,11 +61,11 @@ class ResponsePopup(QWidget):
         header.addWidget(title)
         header.addStretch()
 
-        copy_btn = QPushButton("📋 Copy")
-        copy_btn.setObjectName("primary")
-        copy_btn.setFixedHeight(32)
-        copy_btn.clicked.connect(self._copy_response)
-        header.addWidget(copy_btn)
+        self._copy_btn = QPushButton("📋 Copy")
+        self._copy_btn.setObjectName("primary")
+        self._copy_btn.setFixedHeight(32)
+        self._copy_btn.clicked.connect(self._copy_response)
+        header.addWidget(self._copy_btn)
 
         close_btn = QPushButton("✕")
         close_btn.setFixedSize(32, 32)
@@ -129,6 +124,27 @@ class ResponsePopup(QWidget):
         text = self._text_edit.toPlainText()
         if text:
             QApplication.clipboard().setText(text)
+            # Visual feedback — flash the copy button
+            self._copy_btn.setText("✅ Copied!")
+            self._copy_btn.setStyleSheet(f"""
+                QPushButton {{
+                    background: {COLORS['accent_green']};
+                    border: none;
+                    border-radius: {DIMS['radius_sm']};
+                    padding: 4px 14px;
+                    font-size: {FONTS['size_sm']};
+                    font-weight: {FONTS['weight_bold']};
+                    color: #000;
+                }}
+            """)
+            QTimer.singleShot(1500, self._reset_copy_btn)
+
+    def _reset_copy_btn(self):
+        self._copy_btn.setText("📋 Copy")
+        self._copy_btn.setStyleSheet("")  # revert to global stylesheet
+        self._copy_btn.setObjectName("primary")
+        self._copy_btn.style().unpolish(self._copy_btn)
+        self._copy_btn.style().polish(self._copy_btn)
 
     # ── Drag support ─────────────────────────────────────────
     def mousePressEvent(self, event):

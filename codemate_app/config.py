@@ -62,7 +62,7 @@ CONTEXT_CONFIG = {
 # ── API Backend (hidden from user) ───────────────────────────
 API_CONFIG = {
     "model": "gemini-2.5-flash",
-    "max_tokens": 512,
+    "max_tokens": 8192,
     "temperature": 0.3,
 }
 

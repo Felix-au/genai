@@ -159,7 +159,7 @@ class ModelEngine:
         self.is_loaded = True
         self.gpu_info = GPUInfo()  # default info
 
-        status = f"Model ready in {elapsed:.1f}s | On-device"
+        status = f"Model ready in {elapsed:.1f}s | API"
         log.info(f"✅ {status}")
         self.signals.model_loaded.emit(status)
 
@@ -286,7 +286,7 @@ class ModelEngine:
             )
             return response.text.strip()
         except Exception:
-            # Mask all API errors — no Gemini references leak
+            # Mask all API errors
             raise RuntimeError("Model inference failed")
 
     def _do_generate_local(self, code: str, context: str) -> str:

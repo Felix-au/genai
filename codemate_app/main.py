@@ -148,7 +148,6 @@ class CodeMateApp:
         self.sys_monitor = SystemMonitor(
             interval_ms=UI_CONFIG["stats_refresh_ms"]
         )
-        self.sys_monitor.force_cpu = self.settings.get("force_cpu", False)
 
         # ── UI components ────────────────────────────────────
         self.dashboard = DashboardWindow()
@@ -182,10 +181,13 @@ class CodeMateApp:
         self.sys_monitor.start()
         self.clipboard.start()
 
-        # Start model loading (async) — respect force_cpu and api_mode
+        # Start model loading (async)
+        # force_cpu overrides api_mode — local CPU inference takes priority
+        force_cpu = self.settings.get("force_cpu", False)
+        api_mode = self.settings.get("api_mode", False) and not force_cpu
         self.engine.load_async(
-            force_cpu=self.settings.get("force_cpu", False),
-            api_mode=self.settings.get("api_mode", False),
+            force_cpu=force_cpu,
+            api_mode=api_mode,
             api_key=self.settings.get("api_key", ""),
         )
 
@@ -291,7 +293,9 @@ class CodeMateApp:
         self.dashboard.set_status_color(COLORS["accent_green"])
         self.dashboard.add_activity(f"Model ready: {status}")
         # Set mode label
-        if self.engine.force_cpu:
+        if self.engine.api_mode:
+            self.dashboard.set_backend_info("API")
+        elif self.engine.force_cpu:
             self.dashboard.set_backend_info("CPU")
         else:
             self.dashboard.set_backend_info("GPU")
@@ -338,11 +342,10 @@ class CodeMateApp:
         )
 
     def _on_inference_start(self):
-        self.sys_monitor.set_inferring(True)
         self.dashboard.add_activity("⏳ Inference running…")
 
     def _on_inference_done(self, result: str):
-        self.sys_monitor.set_inferring(False)
+
         self.bubble.set_loading(False)
         self.response_popup.show_response(result)
         self.dashboard.add_activity(
@@ -360,7 +363,7 @@ class CodeMateApp:
         )
 
     def _on_inference_error(self, err: str):
-        self.sys_monitor.set_inferring(False)
+
         self.bubble.set_loading(False)
         self.dashboard.add_activity(f"❌ Inference error: {err[:80]}")
 

@@ -352,3 +352,839 @@ You are CodeMate, an AI code assistant. Analyze the following code. If there are
 The output shows that the model was successfully loaded into CodeMate. The model was trained on the Qwen2.5-Coder-1.5B-Instruct dataset and has been applied with a LoRA adapter. The model took 7.6 seconds to load and was run on a CPU without a GPU.
 
 ========================================================================
+
+========================================================================
+  CODEMATE PIPELINE LOG — 2026-04-30 05:10:42
+========================================================================
+
+── INPUT RECEIVED ──────────────────────────────────────
+C:\Users\Felix\Desktop\genai\codemate_app\core\system_monitor.py:54: FutureWarning: The pynvml package is deprecated. Please install nvidia-ml-py instead. If you did not install pynvml directly, please report this to the maintainers of the package that installed pynvml for you.
+  import pynvml
+PS C:\Users\Felix\Desktop\genai\codemate_app> 05:10:29 [httpx] INFO: HTTP Request: GET https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash "HTTP/1.1 200 OK"
+05:10:29 [core.model_engine] INFO: ✅ Model ready in 4.3s | On-device
+05:10:29 [CodeMate] INFO: Model loaded: Model ready in 4.3s | On-device
+
+
+── WEB CRAWLER — KEYWORD BATCHES ───────────────────────
+  Batch 1: Users Felix Desktop genai
+
+── WEB CRAWLER — QUERIES & RESPONSES ──────────────────
+  [StackOverflow] Query: "Users Felix Desktop genai"
+           Result: (no result)
+
+  [Wikipedia] Query: "Users Felix Desktop genai"
+           Result: [Wiki:Generative AI] Generative artificial intelligence, commonly known as generative AI or GenAI, is a subfield of artificial intelligence that uses generative models to generate text, images, videos, audio, software code (vibe coding) or other forms of data. These models learn the underlying patterns and structures of their training data, and use them to generate new data in response to input, which often takes the form of natural language prompts.
+The prevalence of generative AI tools has increased significantly since the AI boom in the 2020s.
+
+── ASSEMBLED CONTEXT ───────────────────────────────────
+[Wiki:Generative AI] Generative artificial intelligence, commonly known as generative AI or GenAI, is a subfield of artificial intelligence that uses generative models to generate text, images, videos, audio, software code (vibe coding) or other forms of data. These models learn the underlying patterns and structures of their training data, and use them to generate new data in response to input, which often takes the form of natural language prompts.
+The prevalence of generative AI tools has increased significantly since the AI boom in the 2020s.
+
+── FINAL PROMPT ────────────────────────────────────────
+[system]
+You are CodeMate, an AI code assistant. Analyze the following code. If there are errors or tracebacks, identify the bug and suggest a corrected version. If the code is functional, explain its behavior step-by-step.
+
+[user]
+<CODE>
+C:\Users\Felix\Desktop\genai\codemate_app\core\system_monitor.py:54: FutureWarning: The pynvml package is deprecated. Please install nvidia-ml-py instead. If you did not install pynvml directly, please report this to the maintainers of the package that installed pynvml for you.
+  import pynvml
+PS C:\Users\Felix\Desktop\genai\codemate_app> 05:10:29 [httpx] INFO: HTTP Request: GET https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash "HTTP/1.1 200 OK"
+05:10:29 [core.model_engine] INFO: ✅ Model ready in 4.3s | On-device
+05:10:29 [CodeMate] INFO: Model loaded: Model ready in 4.3s | On-device
+
+</CODE>
+
+CONTEXT: [Wiki:Generative AI] Generative artificial intelligence, commonly known as generative AI or GenAI, is a subfield of artificial intelligence that uses generative models to generate text, images, videos, audio, software code (vibe coding) or other forms of data. These models learn the underlying patterns and structures of their training data, and use them to generate new data in response to input, which often takes the form of natural language prompts.
+The prevalence of generative AI tools has increased significantly since the AI boom in the 2020s.
+
+[assistant]
+
+── INFERENCE RESPONSE ──────────────────────────────────
+The provided output is a log of an application's startup process, specifically related to loading a Gener
+
+========================================================================
+
+========================================================================
+  CODEMATE PIPELINE LOG — 2026-04-30 05:12:01
+========================================================================
+
+── INPUT RECEIVED ──────────────────────────────────────
+
+PS C:\Users\Felix\Desktop\genai\codemate_app> 05:10:29 [httpx] INFO: HTTP Request: GET https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash "HTTP/1.1 200 OK"
+05:10:29 [core.model_engine] INFO: ✅ Model ready in 4.3s | On-device
+05:10:29 [CodeMate] INFO: Model loaded: Model ready in 4.3s | On-device
+05:10:38 [google_genai.models] INFO: AFC is enabled with max remote calls: 10.
+05:10:42 [httpx] INFO: HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent "HTTP/1.1 200 OK"
+05:10:42 [CodeMate] 
+
+── WEB CRAWLER — KEYWORD BATCHES ───────────────────────
+  Batch 1: Users Felix Desktop genai
+
+── WEB CRAWLER — QUERIES & RESPONSES ──────────────────
+  [StackOverflow] Query: "Users Felix Desktop genai"
+           Result: (no result)
+
+  [Wikipedia] Query: "Users Felix Desktop genai"
+           Result: [Wiki:Generative AI] Generative artificial intelligence, commonly known as generative AI or GenAI, is a subfield of artificial intelligence that uses generative models to generate text, images, videos, audio, software code (vibe coding) or other forms of data. These models learn the underlying patterns and structures of their training data, and use them to generate new data in response to input, which often takes the form of natural language prompts.
+The prevalence of generative AI tools has increased significantly since the AI boom in the 2020s.
+
+── ASSEMBLED CONTEXT ───────────────────────────────────
+[Wiki:Generative AI] Generative artificial intelligence, commonly known as generative AI or GenAI, is a subfield of artificial intelligence that uses generative models to generate text, images, videos, audio, software code (vibe coding) or other forms of data. These models learn the underlying patterns and structures of their training data, and use them to generate new data in response to input, which often takes the form of natural language prompts.
+The prevalence of generative AI tools has increased significantly since the AI boom in the 2020s.
+
+── FINAL PROMPT ────────────────────────────────────────
+[system]
+You are CodeMate, an AI code assistant. Analyze the following code. If there are errors or tracebacks, identify the bug and suggest a corrected version. If the code is functional, explain its behavior step-by-step.
+
+[user]
+<CODE>
+
+PS C:\Users\Felix\Desktop\genai\codemate_app> 05:10:29 [httpx] INFO: HTTP Request: GET https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash "HTTP/1.1 200 OK"
+05:10:29 [core.model_engine] INFO: ✅ Model ready in 4.3s | On-device
+05:10:29 [CodeMate] INFO: Model loaded: Model ready in 4.3s | On-device
+05:10:38 [google_genai.models] INFO: AFC is enabled with max remote calls: 10.
+05:10:42 [httpx] INFO: HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent "HTTP/1.1 200 OK"
+05:10:42 [CodeMate] 
+</CODE>
+
+CONTEXT: [Wiki:Generative AI] Generative artificial intelligence, commonly known as generative AI or GenAI, is a subfield of artificial intelligence that uses generative models to generate text, images, videos, audio, software code (vibe coding) or other forms of data. These models learn the underlying patterns and structures of their training data, and use them to generate new data in response to input, which often takes the form of natural language prompts.
+The prevalence of generative AI tools has increased significantly since the AI boom in the 2020s.
+
+[assistant]
+
+── INFERENCE RESPONSE ──────────────────────────────────
+The provided text is a log snippet, not a piece of code. It details the execution flow
+
+========================================================================
+
+========================================================================
+  CODEMATE PIPELINE LOG — 2026-04-30 05:12:41
+========================================================================
+
+── INPUT RECEIVED ──────────────────────────────────────
+re.startup_manager] INFO: Startup enabled
+05:12:05 [CodeMate] INFO: Starting CodeMate …
+05:12:05 [core.model_engine] INFO: Initializing API backend …
+C:\Users\Felix\Desktop\genai\codemate_app\core\system_monitor.py:54: FutureWarning: The pynvml package is deprecated. Please install nvidia-ml-py instead. If you did not install pynvml directly, please report this to the maintainers of the package that installed pynvml for you.
+  import pynvml
+05:12:08 [httpx] INFO: HTTP Request: GET https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash "HTTP/1.1 200 OK"
+05:12:08 [core.model_engine] INFO: ✅ Model ready in 3.0s | On-device
+05:12:08 [CodeMate] INFO: Model loaded: Model ready in 3.0s | On-device
+
+── WEB CRAWLER — KEYWORD BATCHES ───────────────────────
+  Batch 1: startup_manager INFO Startup enabled
+
+── WEB CRAWLER — QUERIES & RESPONSES ──────────────────
+  [StackOverflow] Query: "startup_manager INFO Startup enabled"
+           Result: (no result)
+
+  [Wikipedia] Query: "startup_manager INFO Startup enabled"
+           Result: [Wiki:Macintosh startup] The Macintosh startup sequence for Apple Macintosh (or Mac) computers includes hardware tests and diagnostics which can trigger the startup chimes and/or other instances of success or failure of the startup routines.
+The startup sequence provides auditory and visual symbols of the computer's status and condition as it powers up, providing users with immediate feedback on the machine's soundness. Additionally, they allow the user to quickly identify any potential problems and take any appropriate actions to rectify faults.
+
+.
+
+── ASSEMBLED CONTEXT ───────────────────────────────────
+[Wiki:Macintosh startup] The Macintosh startup sequence for Apple Macintosh (or Mac) computers includes hardware tests and diagnostics which can trigger the startup chimes and/or other instances of success or failure of the startup routines.
+The startup sequence provides auditory and visual symbols of the computer's status and condition as it powers up, providing users with immediate feedback on the machine's soundness. Additionally, they allow the user to quickly identify any potential problems and take any appropriate actions to rectify faults.
+
+.
+
+── FINAL PROMPT ────────────────────────────────────────
+[system]
+You are CodeMate, an AI code assistant. Analyze the following code. If there are errors or tracebacks, identify the bug and suggest a corrected version. If the code is functional, explain its behavior step-by-step.
+
+[user]
+<CODE>
+re.startup_manager] INFO: Startup enabled
+05:12:05 [CodeMate] INFO: Starting CodeMate …
+05:12:05 [core.model_engine] INFO: Initializing API backend …
+C:\Users\Felix\Desktop\genai\codemate_app\core\system_monitor.py:54: FutureWarning: The pynvml package is deprecated. Please install nvidia-ml-py instead. If you did not install pynvml directly, please report this to the maintainers of the package that installed pynvml for you.
+  import pynvml
+05:12:08 [httpx] INFO: HTTP Request: GET https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash "HTTP/1.1 200 OK"
+05:12:08 [core.model_engine] INFO: ✅ Model ready in 3.0s | On-device
+05:12:08 [CodeMate] INFO: Model loaded: Model ready in 3.0s | On-device
+</CODE>
+
+CONTEXT: [Wiki:Macintosh startup] The Macintosh startup sequence for Apple Macintosh (or Mac) computers includes hardware tests and diagnostics which can trigger the startup chimes and/or other instances of success or failure of the startup routines.
+The startup sequence provides auditory and visual symbols of the computer's status and condition as it powers up, providing users with immediate feedback on the machine's soundness. Additionally, they allow the user to quickly identify any potential problems and take any appropriate actions to rectify faults.
+
+.
+
+[assistant]
+
+── INFERENCE RESPONSE ──────────────────────────────────
+The provided text is a log output, not executable code. It details the startup sequence of an application named
+
+========================================================================
+
+========================================================================
+  CODEMATE PIPELINE LOG — 2026-04-30 05:13:54
+========================================================================
+
+── INPUT RECEIVED ──────────────────────────────────────
+[INFO] BUILD FAILURE
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  1.357 s
+[INFO] Finished at: 2026-04-30T05:13:32+05:30
+[INFO] ------------------------------------------------------------------------
+[ERROR] No plugin found for prefix 'javafx' in the current project and in the plugin groups [org.apache.maven.plugins, org.codehaus.mojo] available from the repositories [local (C:\Users\Felix\.m2\repository), central (https://repo.maven.apache.org/maven2)] -> [Help 
+1]
+[ERROR]
+[ERROR] To see the full stack trace of the errors, re-run Maven with the -e switch.      
+[ERROR] Re-run Maven using the -X switch to enable full debug logging.
+[ERROR]
+[ERROR] For more information about the errors and possible solutions, please read the following articles:
+[ERROR] [Help 1] http://cwiki.apache.org/confluence/display/MAVEN/NoPluginFoundForPrefixException
+PS C:\Users\Felix\Desktop\genai> 
+
+── WEB CRAWLER — KEYWORD BATCHES ───────────────────────
+  Batch 1: INFO BUILD FAILURE Total
+  Batch 2: repository central https repo
+  Batch 3: confluence display NoPluginFoundForPrefixException Desktop
+
+── WEB CRAWLER — QUERIES & RESPONSES ──────────────────
+  [StackOverflow] Query: "INFO BUILD FAILURE Total"
+           Result: (no result)
+
+  [Wikipedia] Query: "confluence display NoPluginFoundForPrefixException Desktop"
+           Result: (no result)
+
+  [Wikipedia] Query: "repository central https repo"
+           Result: [Wiki:Git] Git ( ) is a distributed version control software system that is capable of managing versions of source code or data. It is often used to control source code by programmers who are developing software collaboratively.
+Design goals of Git include speed, data integrity, and support for distributed, non-linear workflows—thousands of parallel branches running on different computers.
+As with most other distributed version control systems, and unlike most client–server systems, Git maintains a local copy of the entire repository, also known as the "repo", with history and version-tracking abilities, independent of network access or a central server.
+
+  [Wikipedia] Query: "INFO BUILD FAILURE Total"
+           Result: [Wiki:Dot-com bubble] The dot-com bubble (or dot-com boom) was a stock market bubble that developed during the late 1990s and peaked on March 10, 2000. This period of market growth coincided with the widespread adoption of the World Wide Web and the Internet, resulting in a dispensation of available venture capital and the rapid growth of valuations in new dot-com startups.
+
+── ASSEMBLED CONTEXT ───────────────────────────────────
+[Wiki:Git] Git ( ) is a distributed version control software system that is capable of managing versions of source code or data. It is often used to control source code by programmers who are developing software collaboratively.
+Design goals of Git include speed, data integrity, and support for distributed, non-linear workflows—thousands of parallel branches running on different computers.
+As with most other distributed version control systems, and unlike most client–server systems, Git maintains a local copy of the entire repository, also known as the "repo", with history and version-tracking abilities, independent of network access or a central server. | [Wiki:Dot-com bubble] The dot-com bubble (or dot-com boom) was a stock market bubble that developed during the late 1990s and peaked on March 10, 2000. This period of market growth coincided with the widespread adoption of the World Wide Web and the Internet, resulting in a dispensation of available venture capital and the rapid growth of valuations in new dot-com startups.
+
+── FINAL PROMPT ────────────────────────────────────────
+[system]
+You are CodeMate, an AI code assistant. Analyze the following code. If there are errors or tracebacks, identify the bug and suggest a corrected version. If the code is functional, explain its behavior step-by-step.
+
+[user]
+<CODE>
+[INFO] BUILD FAILURE
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  1.357 s
+[INFO] Finished at: 2026-04-30T05:13:32+05:30
+[INFO] ------------------------------------------------------------------------
+[ERROR] No plugin found for prefix 'javafx' in the current project and in the plugin groups [org.apache.maven.plugins, org.codehaus.mojo] available from the repositories [local (C:\Users\Felix\.m2\repository), central (https://repo.maven.apache.org/maven2)] -> [Help 
+1]
+[ERROR]
+[ERROR] To see the full stack trace of the errors, re-run Maven with the -e switch.      
+[ERROR] Re-run Maven using the -X switch to enable full debug logging.
+[ERROR]
+[ERROR] For more information about the errors and possible solutions, please read the following articles:
+[ERROR] [Help 1] http://cwiki.apache.org/confluence/display/MAVEN/NoPluginFoundForPrefixException
+PS C:\Users\Felix\Desktop\genai> 
+</CODE>
+
+CONTEXT: [Wiki:Git] Git ( ) is a distributed version control software system that is capable of managing versions of source code or data. It is often used to control source code by programmers who are developing software collaboratively.
+Design goals of Git include speed, data integrity, and support for distributed, non-linear workflows—thousands of parallel branches running on different computers.
+As with most other distributed version control systems, and unlike most client–server systems, Git maintains a local copy of the entire repository, also known as the "repo", with history and version-tracking abilities, independent of network access or a central server. | [Wiki:Dot-com bubble] The dot-com bubble (or dot-com boom) was a stock market bubble that developed during the late 1990s and peaked on March 10, 2000. This period of market growth coincided with the widespread adoption of the World Wide Web and the Internet, resulting in a dispensation of available venture capital and the rapid growth of valuations in new dot-com startups.
+
+[assistant]
+
+── INFERENCE RESPONSE ──────────────────────────────────
+The provided log indicates a Maven build failure due to a `NoPluginFoundForPrefixException`.
+
+**Error Analysis:**
+
+The core of the problem is clearly stated:
+`[ERROR] No plugin found for prefix 'javafx' in the current project and in the plugin groups [org.apache.maven.plugins, org.codehaus.mojo] available from the repositories [local (C:\Users\Felix\.m2\repository), central (https://repo.maven.apache.org/maven2)]`
+
+This means:
+1.  Maven was instructed to use a plugin with the prefix `javafx` (e.g., by running a command like `mvn javafx:run` or by a plugin configuration in `pom.xml` that only specified `javafx` as an artifact ID without a `groupId`).
+2.  Maven searched for a plugin whose `artifactId` starts with `javafx` within the default `groupId`s (`org.apache.maven.plugins`, `org.codehaus.mojo`).
+3.  It could not find any such plugin in these default groups or in the configured repositories.
+
+The `javafx` prefix typically refers to the `javafx-maven-plugin`, which is used to build and run JavaFX applications. This plugin is usually provided by `org.openjfx` or `com.gluonhq`, not the default Maven plugin groups.
+
+**Bug:**
+
+The bug is that the `javafx-maven-plugin` is either:
+1.  Not declared at all in the project's `pom.xml`.
+2.  Declared incorrectly, missing its full `groupId` and `artifactId`, causing Maven to search for it using only the `javafx` prefix within the wrong default plugin groups.
+
+**Suggested Solution:**
+
+To fix this, you need to explicitly declare the `javafx-maven-plugin` in your project's `pom.xml` file, providing its full `groupId`, `artifactId`, and `version`.
+
+**Corrected Version (Example `pom.xml` snippet):**
+
+Open your `pom.xml` file and add the following plugin configuration within the `<build>` -> `<plugins>` section:
+
+```xml
+<project>
+    <!-- ... other project configurations ... -->
+
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <maven.compiler.source>11</maven.compiler.source> <!-- Or your Java version, e.g., 17, 21 -->
+        <maven.compiler.target>11</maven.compiler.target> <!-- Must match source -->
+        <javafx.version>17.0.2</javafx.version> <!-- Use your desired JavaFX version -->
+        <main.class>com.example.YourMainApplication</main.class> <!-- Replace with your actual main class -->
+    </properties>
+
+    <dependencies>
+        <!-- JavaFX dependencies -->
+        <dependency>
+            <groupId>org.openjfx</groupId>
+            <artifactId>javafx-controls</artifactId>
+            <version>${javafx.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.openjfx</groupId>
+            <artifactId>javafx-fxml</artifactId>
+            <version>${javafx.version}</version>
+        </dependency>
+        <!-- Add other JavaFX modules as needed, e.g., javafx-graphics, javafx-web, etc. -->
+    </dependencies>
+
+    <build>
+        <plugins>
+            <!-- Compiler plugin to ensure correct Java version -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.11.0</version> <!-- Use a recent version -->
+                <configuration>
+                    <source>${maven.compiler.source}</source>
+                    <target>${maven.compiler.target}</target>
+                </configuration>
+            </plugin>
+
+            <!-- JavaFX Maven Plugin -->
+            <plugin>
+                <groupId>org.openjfx</groupId>
+                <artifactId>javafx-maven-plugin</artifactId>
+                <version>0.0.8</version> <!-- Use the latest stable version, e.g., 0.0.8, 0.0.9 -->
+                <configuration>
+                    <mainClass>${main.class}</mainClass>
+                </configuration>
+                <executions>
+                    <execution>
+                        <!-- Default configuration for running -->
+                        <id>default-cli</id>
+                    </execution>
+                    <execution>
+                        <!-- Configuration for building a native image (optional) -->
+                        <id>jlink</id>
+                        <goals>
+                            <goal>jlink</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+</project>
+```
+
+**Steps to Resolve:**
+
+1.  **Locate `pom.xml`:** Find the `pom.xml` file in the root directory of your project.
+2.  **Add Plugin Configuration:** Insert the `javafx-maven-plugin` configuration (as shown above) into the `<build>` -> `<plugins>` section of your `pom.xml`.
+3.  **Update Properties:**
+    *   Set `<maven.compiler.source>` and `<maven.compiler.target>` to your Java version (e.g., 11, 17, 21).
+    *   Set `<javafx.version>` to the JavaFX SDK version you are using (e.g., 17.0.2, 21).
+    *   Update `<main.class>` to the fully qualified name of your main JavaFX application class (e.g., `com.example.MyApp`).
+4.  **Add JavaFX Dependencies:** Ensure you have the necessary JavaFX module dependencies (like `javafx-controls`, `javafx-fxml`, etc.) in your `<dependencies>` section, matching your `<javafx.version>`.
+5.  **Re-run Maven:** After making these changes, try running your Maven command again (e.g., `mvn clean install` or `mvn javafx:run`).
+
+By explicitly defining the `javafx-maven-plugin` with its correct `groupId` and `artifactId`, Maven will be able to locate and use it.
+
+========================================================================
+
+========================================================================
+  CODEMATE PIPELINE LOG — 2026-04-30 05:17:39
+========================================================================
+
+── INPUT RECEIVED ──────────────────────────────────────
+ [httpx] INFO: HTTP Request: HEAD https://huggingface.co/Qwen/Qwen2.5-Coder-1.5B-Instruct/resolve/main/custom_generate/generate.py "HTTP/1.1 404 Not Found"
+05:16:32 [core.model_engine] INFO: Applying LoRA adapter from C:\Users\Felix\Desktop\genai\codemate\final_adapter …
+05:16:33 [core.model_engine] INFO: LoRA adapter merged successfully
+05:16:33 [core.model_engine] INFO: ✅ Model loaded in 8.5s | AMD Radeon(TM) Graphics | CPU
+05:16:33 [CodeMate] INFO: Model loaded: Model loaded in 8.5s | AMD Radeon(TM) Graphics | 
+CPU
+
+── WEB CRAWLER — KEYWORD BATCHES ───────────────────────
+  Batch 1: httpx INFO HTTP Request
+
+── WEB CRAWLER — QUERIES & RESPONSES ──────────────────
+  [StackOverflow] Query: "httpx INFO HTTP Request"
+           Result: (no result)
+
+  [Wikipedia] Query: "httpx INFO HTTP Request"
+           Result: (no result)
+
+── ASSEMBLED CONTEXT ───────────────────────────────────
+(empty — no context)
+
+── FINAL PROMPT ────────────────────────────────────────
+<|im_start|>system
+You are CodeMate, an AI code assistant. Analyze the following code. If there are errors or tracebacks, identify the bug and suggest a corrected version. If the code is functional, explain its behavior step-by-step.<|im_end|>
+<|im_start|>user
+<CODE>
+ [httpx] INFO: HTTP Request: HEAD https://huggingface.co/Qwen/Qwen2.5-Coder-1.5B-Instruct/resolve/main/custom_generate/generate.py "HTTP/1.1 404 Not Found"
+05:16:32 [core.model_engine] INFO: Applying LoRA adapter from C:\Users\Felix\Desktop\genai\codemate\final_adapter …
+05:16:33 [core.model_engine] INFO: LoRA adapter merged successfully
+05:16:33 [core.model_engine] INFO: ✅ Model loaded in 8.5s | AMD Radeon(TM) Graphics | CPU
+05:16:33 [CodeMate] INFO: Model loaded: Model loaded in 8.5s | AMD Radeon(TM) Graphics | 
+CPU
+</CODE><|im_end|>
+<|im_start|>assistant
+
+
+── INFERENCE RESPONSE ──────────────────────────────────
+The output indicates that the model was loaded successfully using the CodeMate library. The model was loaded in 8.5 seconds on an AMD Radeon graphics card and CPU. The model was also loaded from the specified URL and has been applied with a LoRA adapter.
+
+========================================================================
+
+========================================================================
+  CODEMATE PIPELINE LOG — 2026-04-30 05:20:35
+========================================================================
+
+── INPUT RECEIVED ──────────────────────────────────────
+19:50 [httpx] INFO: HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/Qwen/Qwen2.5-Coder-1.5B-Instruct/2e1fd397ee46e1388853d2af2c993145b0f1098a/generation_config.json "HTTP/1.1 200 OK"
+05:19:50 [httpx] INFO: HTTP Request: HEAD https://huggingface.co/Qwen/Qwen2.5-Coder-1.5B-Instruct/resolve/main/custom_generate/generate.py "HTTP/1.1 404 Not Found"
+05:19:50 [core.model_engine] INFO: Applying LoRA adapter from C:\Users\Felix\Desktop\genai\codemate\final_adapter …
+05:19:51 [core.model_engine] INFO: LoRA adapter merged successfully
+05:19:51 [core.model_engine] INFO: ✅ Model loaded in 7.8s | CPU (no GPU) | CPU
+05:19:5
+
+── WEB CRAWLER — KEYWORD BATCHES ───────────────────────
+  Batch 1: httpx INFO HTTP Request
+
+── WEB CRAWLER — QUERIES & RESPONSES ──────────────────
+  [StackOverflow] Query: "httpx INFO HTTP Request"
+           Result: (no result)
+
+  [Wikipedia] Query: "httpx INFO HTTP Request"
+           Result: (no result)
+
+── ASSEMBLED CONTEXT ───────────────────────────────────
+(empty — no context)
+
+── FINAL PROMPT ────────────────────────────────────────
+<|im_start|>system
+You are CodeMate, an AI code assistant. Analyze the following code. If there are errors or tracebacks, identify the bug and suggest a corrected version. If the code is functional, explain its behavior step-by-step.<|im_end|>
+<|im_start|>user
+<CODE>
+19:50 [httpx] INFO: HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/Qwen/Qwen2.5-Coder-1.5B-Instruct/2e1fd397ee46e1388853d2af2c993145b0f1098a/generation_config.json "HTTP/1.1 200 OK"
+05:19:50 [httpx] INFO: HTTP Request: HEAD https://huggingface.co/Qwen/Qwen2.5-Coder-1.5B-Instruct/resolve/main/custom_generate/generate.py "HTTP/1.1 404 Not Found"
+05:19:50 [core.model_engine] INFO: Applying LoRA adapter from C:\Users\Felix\Desktop\genai\codemate\final_adapter …
+05:19:51 [core.model_engine] INFO: LoRA adapter merged successfully
+05:19:51 [core.model_engine] INFO: ✅ Model loaded in 7.8s | CPU (no GPU) | CPU
+05:19:5
+</CODE><|im_end|>
+<|im_start|>assistant
+
+
+── INFERENCE RESPONSE ──────────────────────────────────
+This code snippet is using the `httpx` library to make HTTP requests and the `core.model_engine` module to load a model. The model is being loaded from the Hugging Face Hub and applying a LoRA adapter. The model is then being loaded in 7.8 seconds on a CPU with no GPU.
+
+========================================================================
+
+========================================================================
+  CODEMATE PIPELINE LOG — 2026-04-30 12:06:34
+========================================================================
+
+── INPUT RECEIVED ──────────────────────────────────────
+from __future__ import annotations
+import math
+import logging
+from PySide6.QtCore import (Qt, QTimer, QPropertyAnimation, QEasingCurve,
+                             QPoint, Signal, Property, QRect, QRectF)
+from PySide6.QtGui import (QPainter, QColor, QRadialGradient, QConicalGradient,
+                            QCursor, QFont, QPen)
+from PySide6.QtWidgets import QWidget, QApplication
+from ui.theme import COLORS
+from config import UI_CONFIG
+
+── WEB CRAWLER — KEYWORD BATCHES ───────────────────────
+  Batch 1: annotations math logging PySide6
+
+── WEB CRAWLER — QUERIES & RESPONSES ──────────────────
+  [StackOverflow] Query: "annotations math logging PySide6"
+           Result: (no result)
+
+  [Wikipedia] Query: "annotations math logging PySide6"
+           Result: (no result)
+
+── ASSEMBLED CONTEXT ───────────────────────────────────
+(empty — no context)
+
+── FINAL PROMPT ────────────────────────────────────────
+<|im_start|>system
+You are CodeMate, an AI code assistant. Analyze the following code. If there are errors or tracebacks, identify the bug and suggest a corrected version. If the code is functional, explain its behavior step-by-step.<|im_end|>
+<|im_start|>user
+<CODE>
+from __future__ import annotations
+import math
+import logging
+from PySide6.QtCore import (Qt, QTimer, QPropertyAnimation, QEasingCurve,
+                             QPoint, Signal, Property, QRect, QRectF)
+from PySide6.QtGui import (QPainter, QColor, QRadialGradient, QConicalGradient,
+                            QCursor, QFont, QPen)
+from PySide6.QtWidgets import QWidget, QApplication
+from ui.theme import COLORS
+from config import UI_CONFIG
+</CODE><|im_end|>
+<|im_start|>assistant
+
+
+── INFERENCE RESPONSE ──────────────────────────────────
+This code appears to be a Python script using the Qt framework for creating graphical user interfaces. It imports several modules such as PyQt6, PySide6.QtCore, PySide6.QtGui, and PySide6.QtWidgets. The script also uses some custom classes from the "ui/theme.py" and "config.py" files. The code defines several variables and functions, including constants like COLORS and UI_CONFIG, and it creates a class called Widget that inherits from QWidget.
+
+========================================================================
+
+========================================================================
+  CODEMATE PIPELINE LOG — 2026-04-30 12:07:36
+========================================================================
+
+── INPUT RECEIVED ──────────────────────────────────────
+Input (instruction field):
+<CODE>def fibonacci(n):    if n <= 0:        return 0    elif n == 1:        return 1    return fibonacci(n-1) + fibonacci(n-1)  # bug: second call</CODE><ERROR>Wrong output</ERROR>
+Expected response (response field):
+**Mode: DEBUG**Bug: second recursive call uses fibonacci(n-1) instead of fibonacci(n-2).**Fixed:**```pythondef fibonacci(n):    if n <= 0:        return 0    elif n == 1:        return 1    return fibonacci(n-1) + fibonacci(n-2)```
+
+Appendix C: LoRA Adapter Configuration (adapter_config.json)
+{  "r": 16,  "lora_alpha": 32,  "target_modules": ["q_proj","k_proj","v_proj","o_proj","gate_proj","up_proj","down_proj"],  "lora_dropout": 0.05,  "bias": "none",  "task_type": "CAUSAL_LM",  "base_model_name_or_path": "Qwen/Qwen2.5-Coder-1.5B-Instruct"}
+
+
+── WEB CRAWLER — KEYWORD BATCHES ───────────────────────
+  Batch 1: Input instruction field CODE
+
+── WEB CRAWLER — QUERIES & RESPONSES ──────────────────
+  [StackOverflow] Query: "Input instruction field CODE"
+           Result: (no result)
+
+  [Wikipedia] Query: "Input instruction field CODE"
+           Result: [Wiki:Machine code] In computing, machine code is data encoded and structured to control a computer's central processing unit (CPU) via its programmable interface. A computer program consists primarily of sequences of machine-code instructions.
+
+── ASSEMBLED CONTEXT ───────────────────────────────────
+[Wiki:Machine code] In computing, machine code is data encoded and structured to control a computer's central processing unit (CPU) via its programmable interface. A computer program consists primarily of sequences of machine-code instructions.
+
+── FINAL PROMPT ────────────────────────────────────────
+[system]
+You are CodeMate, an AI code assistant. Analyze the following code. If there are errors or tracebacks, identify the bug and suggest a corrected version. If the code is functional, explain its behavior step-by-step.
+
+[user]
+<CODE>
+Input (instruction field):
+<CODE>def fibonacci(n):    if n <= 0:        return 0    elif n == 1:        return 1    return fibonacci(n-1) + fibonacci(n-1)  # bug: second call</CODE><ERROR>Wrong output</ERROR>
+Expected response (response field):
+**Mode: DEBUG**Bug: second recursive call uses fibonacci(n-1) instead of fibonacci(n-2).**Fixed:**```pythondef fibonacci(n):    if n <= 0:        return 0    elif n == 1:        return 1    return fibonacci(n-1) + fibonacci(n-2)```
+
+Appendix C: LoRA Adapter Configuration (adapter_config.json)
+{  "r": 16,  "lora_alpha": 32,  "target_modules": ["q_proj","k_proj","v_proj","o_proj","gate_proj","up_proj","down_proj"],  "lora_dropout": 0.05,  "bias": "none",  "task_type": "CAUSAL_LM",  "base_model_name_or_path": "Qwen/Qwen2.5-Coder-1.5B-Instruct"}
+
+</CODE>
+
+CONTEXT: [Wiki:Machine code] In computing, machine code is data encoded and structured to control a computer's central processing unit (CPU) via its programmable interface. A computer program consists primarily of sequences of machine-code instructions.
+
+[assistant]
+
+── INFERENCE RESPONSE ──────────────────────────────────
+**Mode: DEBUG**
+Bug: The recursive definition of the Fibonacci sequence is `F(n) = F(n-1) + F(n-2)`. In the provided code, the second recursive call is `fibonacci(n-1)` instead of `fibonacci(n-2)`. This causes the function to sum `F(n-1)` with itself, leading to incorrect results (e.g., `fibonacci(3)` would return 4 instead of 2).
+
+**Fixed:**
+```python
+def fibonacci(n):
+    if n <= 0:
+        return 0
+    elif n == 1:
+        return 1
+    return fibonacci(n-1) + fibonacci(n-2)
+```
+
+========================================================================
+
+========================================================================
+  CODEMATE PIPELINE LOG — 2026-04-30 13:39:16
+========================================================================
+
+── INPUT RECEIVED ──────────────────────────────────────
+from __future__ import annotations
+import math
+import logging
+from PySide6.QtCore import (Qt, QTimer, QPropertyAnimation, QEasingCurve,
+                             QPoint, Signal, Property, QRect, QRectF)
+from PySide6.QtGui import (QPainter, QColor, QRadialGradient, QConicalGradient,
+                            QCursor, QFont, QPen)
+from PySide6.QtWidgets import QWidget, QApplication
+from ui.theme import COLORS
+from config import UI_CONFIG
+
+log = logging.getLogger(__name__)
+
+
+class FloatingBubble(QWidget):
+    """
+    A glowing circle that pops up near the cursor when code is copied.
+    Click to trigger inference. Auto-hides after timeout.
+
+── WEB CRAWLER — KEYWORD BATCHES ───────────────────────
+  Batch 1: annotations math logging PySide6
+
+── WEB CRAWLER — QUERIES & RESPONSES ──────────────────
+  [StackOverflow] Query: "annotations math logging PySide6"
+           Result: (no result)
+
+  [Wikipedia] Query: "annotations math logging PySide6"
+           Result: (no result)
+
+── ASSEMBLED CONTEXT ───────────────────────────────────
+(empty — no context)
+
+── FINAL PROMPT ────────────────────────────────────────
+<|im_start|>system
+You are CodeMate, an AI code assistant. Analyze the following code. If there are errors or tracebacks, identify the bug and suggest a corrected version. If the code is functional, explain its behavior step-by-step.<|im_end|>
+<|im_start|>user
+<CODE>
+from __future__ import annotations
+import math
+import logging
+from PySide6.QtCore import (Qt, QTimer, QPropertyAnimation, QEasingCurve,
+                             QPoint, Signal, Property, QRect, QRectF)
+from PySide6.QtGui import (QPainter, QColor, QRadialGradient, QConicalGradient,
+                            QCursor, QFont, QPen)
+from PySide6.QtWidgets import QWidget, QApplication
+from ui.theme import COLORS
+from config import UI_CONFIG
+
+log = logging.getLogger(__name__)
+
+
+class FloatingBubble(QWidget):
+    """
+    A glowing circle that pops up near the cursor when code is copied.
+    Click to trigger inference. Auto-hides after timeout.
+</CODE><|im_end|>
+<|im_start|>assistant
+
+
+── INFERENCE RESPONSE ──────────────────────────────────
+The provided Python code defines a class called FloatingBubble which inherits from QWidget. The class displays a glowing circular widget near the mouse pointer when code is copied. When clicked, it triggers inference. The widget automatically hides after a specified timeout period. The class uses Qt for GUI development and has properties such as colors and font size.
+
+========================================================================
+
+========================================================================
+  CODEMATE PIPELINE LOG — 2026-04-30 13:50:06
+========================================================================
+
+── INPUT RECEIVED ──────────────────────────────────────
+from __future__ import annotations
+import math
+import logging
+from PySide6.QtCore import (Qt, QTimer, QPropertyAnimation, QEasingCurve,
+                             QPoint, Signal, Property, QRect, QRectF)
+from PySide6.QtGui import (QPainter, QColor, QRadialGradient, QConicalGradient,
+                            QCursor, QFont, QPen)
+from PySide6.QtWidgets import QWidget, QApplication
+from ui.theme import COLORS
+from config import UI_CONFIG
+
+log = logging.getLogger(__name__)
+
+── WEB CRAWLER — KEYWORD BATCHES ───────────────────────
+  Batch 1: annotations math logging PySide6
+
+── WEB CRAWLER — QUERIES & RESPONSES ──────────────────
+  [StackOverflow] Query: "annotations math logging PySide6"
+           Result: (no result)
+
+  [Wikipedia] Query: "annotations math logging PySide6"
+           Result: (no result)
+
+── ASSEMBLED CONTEXT ───────────────────────────────────
+(empty — no context)
+
+── FINAL PROMPT ────────────────────────────────────────
+<|im_start|>system
+You are CodeMate, an AI code assistant. Analyze the following code. If there are errors or tracebacks, identify the bug and suggest a corrected version. If the code is functional, explain its behavior step-by-step.<|im_end|>
+<|im_start|>user
+<CODE>
+from __future__ import annotations
+import math
+import logging
+from PySide6.QtCore import (Qt, QTimer, QPropertyAnimation, QEasingCurve,
+                             QPoint, Signal, Property, QRect, QRectF)
+from PySide6.QtGui import (QPainter, QColor, QRadialGradient, QConicalGradient,
+                            QCursor, QFont, QPen)
+from PySide6.QtWidgets import QWidget, QApplication
+from ui.theme import COLORS
+from config import UI_CONFIG
+
+log = logging.getLogger(__name__)
+</CODE><|im_end|>
+<|im_start|>assistant
+
+
+── INFERENCE RESPONSE ──────────────────────────────────
+This code appears to be part of a larger application written in Python using the Qt framework. It imports several modules and defines some variables and classes. The main class inherits from QWidget and uses some of the Qt widgets such as QPushButton, QLabel, and QVBoxLayout.
+
+The code also uses some external libraries like PySide6 for GUI development and config for configuration settings. The logger is used for debugging purposes.
+
+Overall, this code looks well-structured and follows good programming practices.
+
+========================================================================
+
+========================================================================
+  CODEMATE PIPELINE LOG — 2026-04-30 13:53:19
+========================================================================
+
+── INPUT RECEIVED ──────────────────────────────────────
+            self._hide_timer.stop()
+            self.clicked.emit()
+            event.accept()
+
+    def _fade_out(self):
+        self._pulse_anim.stop()
+        self.hide()
+
+    def _update_spin(self):
+        self._spin_angle = (self._spin_angle + 6) % 360
+        self.update()
+
+
+── WEB CRAWLER — KEYWORD BATCHES ───────────────────────
+  Batch 1: _hide_timer stop clicked emit
+
+── WEB CRAWLER — QUERIES & RESPONSES ──────────────────
+  [StackOverflow] Query: "_hide_timer stop clicked emit"
+           Result: (no result)
+
+  [Wikipedia] Query: "_hide_timer stop clicked emit"
+           Result: [Wiki:List of Swamp People episodes (season 1–10)] Swamp People is an American reality series that was first broadcast on History on August 22, 2010. The show follows the day-to-day activities of people living in the swamps of the Atchafalaya River Basin who hunt American alligators for a living.
+As of April 1, 2026, 288 episodes of Swamp People have aired, currently in the 17th season..
+
+── ASSEMBLED CONTEXT ───────────────────────────────────
+[Wiki:List of Swamp People episodes (season 1–10)] Swamp People is an American reality series that was first broadcast on History on August 22, 2010. The show follows the day-to-day activities of people living in the swamps of the Atchafalaya River Basin who hunt American alligators for a living.
+As of April 1, 2026, 288 episodes of Swamp People have aired, currently in the 17th season..
+
+── FINAL PROMPT ────────────────────────────────────────
+[system]
+You are CodeMate, an AI code assistant. Analyze the following code. If there are errors or tracebacks, identify the bug and suggest a corrected version. If the code is functional, explain its behavior step-by-step.
+
+[user]
+<CODE>
+            self._hide_timer.stop()
+            self.clicked.emit()
+            event.accept()
+
+    def _fade_out(self):
+        self._pulse_anim.stop()
+        self.hide()
+
+    def _update_spin(self):
+        self._spin_angle = (self._spin_angle + 6) % 360
+        self.update()
+
+</CODE>
+
+CONTEXT: [Wiki:List of Swamp People episodes (season 1–10)] Swamp People is an American reality series that was first broadcast on History on August 22, 2010. The show follows the day-to-day activities of people living in the swamps of the Atchafalaya River Basin who hunt American alligators for a living.
+As of April 1, 2026, 288 episodes of Swamp People have aired, currently in the 17th season..
+
+[assistant]
+
+── INFERENCE RESPONSE ──────────────────────────────────
+The provided code snippet is a functional fragment of a Python class, likely a custom GUI widget, given the methods like `stop()`, `emit()`, `accept()`, `hide()`, and `update()`, which are common in GUI frameworks like PyQt or PySide. There are no syntax errors or immediate logical flaws that would cause a traceback within this snippet.
+
+Here's a step-by-step explanation of its behavior:
+
+1.  **First unnamed block (likely part of an event handler, e.g., `mousePressEvent` or `mouseReleaseEvent`):**
+    *   `self._hide_timer.stop()`: This line stops a timer object named `_hide_timer`. This timer was likely set up to perform an action (e.g., hide the widget) after a certain delay. Stopping it here suggests that the event (e.g., a click) has occurred, and the delayed action is no longer needed or should be prevented.
+    *   `self.clicked.emit()`: This emits a custom signal named `clicked`. In GUI programming, signals are used to notify other parts of the application when an event occurs on a widget. Any functions or "slots" connected to this `clicked` signal will be executed.
+    *   `event.accept()`: This marks the current event (which is passed as `event` to the handler) as handled. This prevents the event from propagating further up the widget hierarchy to parent widgets, ensuring that only this widget processes it.
+
+2.  **`def _fade_out(self):` method:**
+    *   This method is designed to make the widget disappear.
+    *   `self._pulse_anim.stop()`: It first stops an animation object named `_pulse_anim`. This animation was likely responsible for a "pulsing" visual effect on the widget. Stopping it ensures that the pulse effect ceases before the widget is hidden.
+    *   `self.hide()`: This method immediately makes the widget invisible. The widget is no longer rendered on the screen and does not occupy any layout space.
+
+3.  **`def _update_spin(self):` method:**
+    *   This method is responsible for updating the state of a spinning visual element within the widget. It's typically called repeatedly by a timer to create an animation.
+    *   `self._spin_angle = (self._spin_angle + 6) % 360`: This line updates an internal variable `_spin_angle`. It increments the angle by 6 degrees. The modulo operator (`% 360`) ensures that the angle wraps around from 359 back to 0, keeping it within the standard 0-359 degree range for continuous rotation.
+    *   `self.update()`: This schedules a repaint event for the widget. This means that the widget's `paintEvent` method (not shown in the snippet) will be called soon, which will then redraw the widget using the newly calculated `_spin_angle` to render a spinning element (e.g., a loading indicator, an arrow, or a rotating icon).
+
+========================================================================
+
+========================================================================
+  CODEMATE PIPELINE LOG — 2026-04-30 14:18:07
+========================================================================
+
+── INPUT RECEIVED ──────────────────────────────────────
+
+        # ── LOADING STATE — outer spinner ring ───────────────
+        if self._is_loading:
+            orbit_r = r + 12  # ring radius (outside the bubble)
+            ring_w = 4.0      # ring stroke width
+
+            # 1) Dim track ring (full circle, low opacity)
+            track = QColor(COLORS["accent_cyan"])
+            track.setAlpha(35)
+            painter.setPen(QPen(track, ring_w))
+            painter.setBrush(Qt.BrushStyle.NoBrush)
+            painter.drawEllipse(QRectF(
+                cx - orbit_r, cy - orbit_r, orbit_r * 2, orbit_r * 2
+            ))
+
+
+── WEB CRAWLER — KEYWORD BATCHES ───────────────────────
+  Batch 1: LOADING STATE outer spinner
+
+── WEB CRAWLER — QUERIES & RESPONSES ──────────────────
+  [StackOverflow] Query: "LOADING STATE outer spinner"
+           Result: (no result)
+
+  [Wikipedia] Query: "LOADING STATE outer spinner"
+           Result: [Wiki:List of Spidey and His Amazing Friends episodes] Spidey and His Amazing Friends is an animated television series produced by Marvel Studios Animation (formerly Marvel Animation) and animated by Atomic Cartoons that premiered on Disney Jr. on August 6, 2021.
+
+.
+
+── ASSEMBLED CONTEXT ───────────────────────────────────
+[Wiki:List of Spidey and His Amazing Friends episodes] Spidey and His Amazing Friends is an animated television series produced by Marvel Studios Animation (formerly Marvel Animation) and animated by Atomic Cartoons that premiered on Disney Jr. on August 6, 2021.
+
+.
+
+── FINAL PROMPT ────────────────────────────────────────
+<|im_start|>system
+You are CodeMate, an AI code assistant. Analyze the following code. If there are errors or tracebacks, identify the bug and suggest a corrected version. If the code is functional, explain its behavior step-by-step.<|im_end|>
+<|im_start|>user
+<CODE>
+
+        # ── LOADING STATE — outer spinner ring ───────────────
+        if self._is_loading:
+            orbit_r = r + 12  # ring radius (outside the bubble)
+            ring_w = 4.0      # ring stroke width
+
+            # 1) Dim track ring (full circle, low opacity)
+            track = QColor(COLORS["accent_cyan"])
+            track.setAlpha(35)
+            painter.setPen(QPen(track, ring_w))
+            painter.setBrush(Qt.BrushStyle.NoBrush)
+            painter.drawEllipse(QRectF(
+                cx - orbit_r, cy - orbit_r, orbit_r * 2, orbit_r * 2
+            ))
+
+</CODE>
+
+CONTEXT: [Wiki:List of Spidey and His Amazing Friends episodes] Spidey and His Amazing Friends is an animated television series produced by Marvel Studios Animation (formerly Marvel Animation) and animated by Atomic Cartoons that premiered on Disney Jr. on August 6, 2021.
+
+.<|im_end|>
+<|im_start|>assistant
+
+
+── INFERENCE RESPONSE ──────────────────────────────────
+The given code snippet is for drawing a loading state in an animation using Qt. The loading state consists of an outer spinner ring with a full circle and a low opacity track ring. The ring has a radius of 12 units from the center point and a stroke width of 4 units. The color of the track ring is set to cyan and the opacity is set to 35%. The ring is drawn using a QPainter object and the drawEllipse() function.
+
+========================================================================
