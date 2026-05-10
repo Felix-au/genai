@@ -24,9 +24,22 @@ DATA_DIR.mkdir(parents=True, exist_ok=True)
 SETTINGS_FILE = DATA_DIR / "settings.json"
 
 # ── Model ────────────────────────────────────────────────────
+def _resolve_adapter_path() -> str:
+    """Find the adapter — checks multiple locations for dev and packaged modes."""
+    candidates = [
+        BASE_DIR / "adapter",                          # next to exe
+        BASE_DIR.parent / "codemate" / "final_adapter", # dev layout
+        DATA_DIR / "adapter",                           # user-installed
+    ]
+    for p in candidates:
+        if p.exists():
+            return str(p)
+    return str(candidates[0])  # default (will log warning if missing)
+
+
 MODEL_CONFIG = {
     "base_model_id": "Qwen/Qwen2.5-Coder-1.5B-Instruct",
-    "adapter_path": str(BASE_DIR.parent / "codemate" / "final_adapter"),
+    "adapter_path": _resolve_adapter_path(),
     "local_model_cache": str(DATA_DIR / "model_cache"),
     "max_new_tokens": 512,
     "temperature": 0.3,

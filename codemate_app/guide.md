@@ -7,25 +7,47 @@ An AI-powered desktop code debugger & explainer that lives in your clipboard. Co
 
 ## 🚀 How to Run
 
-### Prerequisites
-- Python 3.10+
-- Windows 10/11
-- (Optional) NVIDIA or AMD GPU for faster inference
+### Option A — From Source (Development)
 
-### Installation
+**Prerequisites:** Python 3.10+, Windows 10/11, (Optional) NVIDIA or AMD GPU
 
 ```bash
 cd codemate_app
 pip install -r requirements.txt
-```
-
-### Run
-
-```bash
 python main.py
 ```
 
 On first launch, the base model (~3GB) is auto-downloaded from HuggingFace. Subsequent launches load from cache.
+
+### Option B — Standalone EXE
+
+Download `CodeMate.exe` from [Releases](https://github.com/Felix-au/genai/releases) — no Python installation needed.
+
+```
+Just double-click CodeMate.exe
+```
+
+> [!NOTE]
+> The EXE bundles all Python dependencies and libraries inside a single file. The AI model (~3GB) is **not** bundled — it downloads automatically from HuggingFace on first launch and is cached locally at `%LOCALAPPDATA%/CodeMate/CodeMate/model_cache/`.
+
+## 📦 How to Build the EXE
+
+```bash
+cd codemate_app
+pip install -r requirements.txt    # ensure all deps are installed
+python build.py                    # runs PyInstaller single-file build
+```
+
+Output: `dist/CodeMate.exe` — a fully self-contained executable.
+
+**What's bundled inside the EXE:**
+- All Python runtime + dependencies (torch, transformers, PySide6, etc.)
+- App assets (icon)
+- All core and UI modules
+
+**What's NOT bundled (downloads on first run):**
+- Base model: Qwen2.5-Coder-1.5B-Instruct (~3GB) — cached at `%LOCALAPPDATA%/CodeMate/CodeMate/model_cache/`
+- LoRA adapter (optional) — place in an `adapter/` folder next to the EXE if available
 
 ## 🎯 How to Use
 
@@ -49,15 +71,6 @@ Access via the ⚙ gear icon on the dashboard:
 | **Minimize to tray on close** | Close button hides to system tray instead of quitting |
 | **Force CPU only** | Bypass GPU detection and run inference on CPU (requires restart) |
 | **API Mode** | Switch to Gemini Flash API backend instead of local model (requires API key + restart) |
-
-## 📦 Building an EXE
-
-```bash
-cd codemate_app
-python build.py
-```
-
-Output in `dist/CodeMate/CodeMate.exe` — the LoRA adapter is copied alongside automatically.
 
 ## ⚠️ Important Notes
 

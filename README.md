@@ -65,17 +65,17 @@ Before inference, CodeMate automatically enriches the prompt with **web-sourced 
 ## 📸 Screenshots
 
 <p align="center">
-  <img src="../Application Screenshots/application_dashboard.PNG" width="700" alt="CodeMate Dashboard"/>
+  <img src="Application Screenshots/application_dashboard.PNG" width="700" alt="CodeMate Dashboard"/>
   <br/><em>Dashboard — system metrics, model status, activity log, and settings</em>
 </p>
 
 <p align="center">
-  <img src="../Application Screenshots/CodeMate Popup.PNG" width="500" alt="CodeMate Floating Bubble"/>
+  <img src="Application Screenshots/CodeMate Popup.PNG" width="500" alt="CodeMate Floating Bubble"/>
   <br/><em>Floating bubble — appears at your cursor when code is detected in the clipboard</em>
 </p>
 
 <p align="center">
-  <img src="../Application Screenshots/CodeMate in Action.PNG" width="600" alt="CodeMate Response Popup"/>
+  <img src="Application Screenshots/CodeMate in Action.PNG" width="600" alt="CodeMate Response Popup"/>
   <br/><em>Response popup — AI analysis with one-click copy to clipboard</em>
 </p>
 

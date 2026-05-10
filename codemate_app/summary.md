@@ -17,6 +17,26 @@ CodeMate is an AI-powered desktop application that monitors the system clipboard
 - **Local (default)**: Qwen2.5-Coder-1.5B-Instruct with custom QLoRA adapter. Supports NVIDIA CUDA (4-bit NF4 quantization), AMD ROCm (float16), or CPU (float32). Model auto-downloaded from HuggingFace on first launch.
 - **API (opt-in)**: Gemini 2.5 Flash via Google GenAI SDK. Configured through the settings dialog. API errors are masked to prevent backend leakage.
 
+## Distribution & Build
+
+### Standalone EXE
+CodeMate can be packaged as a single-file Windows executable using PyInstaller:
+
+```bash
+cd codemate_app
+python build.py
+```
+
+**What's bundled in the EXE:**
+- Python runtime + all dependencies (torch, transformers, PySide6, peft, bitsandbytes, etc.)
+- Application assets and all core/UI modules
+
+**What downloads on first run:**
+- Base model: Qwen2.5-Coder-1.5B-Instruct (~3GB) from HuggingFace → cached at `%LOCALAPPDATA%/CodeMate/CodeMate/model_cache/`
+- LoRA adapter (optional) — placed in `adapter/` folder next to the EXE if available
+
+**Rationale:** The model is ~3GB and would create an impractically large EXE if bundled. Instead, it downloads once and is cached permanently for offline use.
+
 ## Key Components
 
 | Component | File | Role |
@@ -32,6 +52,9 @@ CodeMate is an AI-powered desktop application that monitors the system clipboard
 | **Response Popup** | `ui/response_popup.py` | Frameless popup displaying AI response with copy-to-clipboard button. |
 | **Settings Dialog** | `ui/settings_dialog.py` | Modal dialog for API mode toggle and API key entry. |
 | **Tray Icon** | `ui/tray_icon.py` | System tray icon with show/quit context menu. |
+| **Build Script** | `build.py` | PyInstaller build automation — single-file EXE output. |
+| **Build Spec** | `build.spec` | PyInstaller spec file — collects all hidden imports, data files, and bundles into single EXE. |
+| **Config** | `config.py` | Centralized configuration — model params, UI settings, API config. Resolves paths for both dev and frozen modes. |
 
 ## Model Training Pipeline
 The project includes a complete ML training pipeline (in `Model Training CODE/`):
@@ -45,5 +68,5 @@ The project includes a complete ML training pipeline (in `Model Training CODE/`)
 - **ML Stack**: PyTorch, HuggingFace Transformers, PEFT (QLoRA), BitsAndBytes (4-bit)
 - **GPU Support**: NVIDIA CUDA, AMD ROCm, CPU fallback
 - **Web Context**: Wikipedia API, howdoi (StackOverflow)
-- **Packaging**: PyInstaller (standalone .exe)
+- **Packaging**: PyInstaller (single-file .exe, all deps bundled)
 - **Platform**: Windows 10/11 (Win32 clipboard API)
