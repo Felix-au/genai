@@ -40,7 +40,7 @@ from PySide6.QtWidgets import QApplication, QMessageBox
 from PySide6.QtGui import QCloseEvent
 
 from config import (
-    UI_CONFIG, DEFAULT_SETTINGS, SETTINGS_FILE, CONTEXT_CONFIG
+    BASE_DIR, UI_CONFIG, DEFAULT_SETTINGS, SETTINGS_FILE, CONTEXT_CONFIG
 )
 from core.model_engine import ModelEngine
 from core.clipboard_monitor import ClipboardMonitor
@@ -151,6 +151,13 @@ class CodeMateApp:
         self.app = QApplication(sys.argv)
         self.app.setApplicationName(UI_CONFIG["app_name"])
         self.app.setQuitOnLastWindowClosed(False)
+
+        # ── App-wide icon (title bar + taskbar + ALT+TAB) ────
+        from PySide6.QtGui import QIcon
+        logo = BASE_DIR / "assets" / "CodeMate-logo.png"
+        if logo.exists():
+            self.app.setWindowIcon(QIcon(str(logo)))
+
         self.app.setStyleSheet(get_global_stylesheet())
 
         self.settings = self._load_settings()
