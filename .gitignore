@@ -1,0 +1,52 @@
+# ── Python ───────────────────────────────────────
+__pycache__/
+*.py[cod]
+*.pyo
+*.egg-info/
+*.egg
+dist/
+build/
+*.spec.bak
+
+# ── PyInstaller ──────────────────────────────────
+*.manifest
+*.log
+
+# ── Virtual environments ─────────────────────────
+venv/
+.venv/
+env/
+
+# ── Model & data (too large for git) ─────────────
+*.bin
+*.safetensors
+*.gguf
+*.pt
+*.pth
+*.onnx
+model_cache/
+codemate_app/dist/
+codemate_app/build/
+model_results-adpater-data/checkpoints/
+model_results-adpater-data/final_adapter/
+model_results-adpater-data/data/
+
+# ── IDE ──────────────────────────────────────────
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# ── OS ───────────────────────────────────────────
+Thumbs.db
+Desktop.ini
+.DS_Store
+
+# ── Logs ─────────────────────────────────────────
+codemate_app/log.txt
+
+# ── Secrets ──────────────────────────────────────
+settings.json
+*.env
+.env
