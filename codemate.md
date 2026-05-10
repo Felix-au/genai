@@ -26,10 +26,10 @@
 
 ```
 ┌──────────────┐     ┌──────────────┐     ┌──────────────────┐     ┌──────────────┐     ┌────────────────┐
-│  You copy     │────▶│  Bubble      │────▶│  Context         │────▶│  AI Model    │────▶│  Response      │
-│  some code    │     │  appears     │     │  Enrichment      │     │  (on-device) │     │  Popup         │
-│  (Ctrl+C)     │     │  (click it!) │     │  (Wikipedia/SO)  │     │  generates   │     │  with fix /    │
-│               │     │              │     │                  │     │  answer      │     │  explanation   │
+│  You copy    │────▶│  Bubble      │───▶│  Context         │───▶│  AI Model    │────▶│  Response      │
+│  some code   │     │  appears     │     │  Enrichment      │     │  (on-device) │     │  Popup         │
+│  (Ctrl+C)    │     │  (click it!) │     │  (Wikipedia/SO)  │     │  generates   │     │  with fix /    │
+│              │     │              │     │                  │     │  answer      │     │  explanation   │
 └──────────────┘     └──────────────┘     └──────────────────┘     └──────────────┘     └────────────────┘
 ```
 
