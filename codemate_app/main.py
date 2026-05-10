@@ -11,8 +11,24 @@ import json
 import logging
 import sys
 import os
+import inspect
 from datetime import datetime
 from pathlib import Path
+
+# ── PyInstaller frozen-mode patch ────────────────────────────
+# When bundled as a .exe, source .py files aren't available.
+# Transformers/peft call inspect.getsource() internally which
+# raises OSError. This patch returns an empty string instead.
+if getattr(sys, "frozen", False):
+    _original_getsource = inspect.getsource
+
+    def _safe_getsource(obj):
+        try:
+            return _original_getsource(obj)
+        except (OSError, TypeError):
+            return ""
+
+    inspect.getsource = _safe_getsource
 
 # Ensure the app directory is on the Python path
 app_dir = str(Path(__file__).resolve().parent)
