@@ -27,7 +27,7 @@ class DashboardWindow(QMainWindow):
 
     def __init__(self, parent=None):
         super().__init__(parent)
-        self.setWindowTitle("CodeMate — AI Code Assistant")
+        self.setWindowTitle("CodeMate: Your Coding Companion")
         self.setMinimumSize(UI_CONFIG["dashboard_width"], UI_CONFIG["dashboard_height"])
         self._activity_items: list[str] = []
 
