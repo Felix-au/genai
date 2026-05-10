@@ -1,4 +1,4 @@
-# CodeMate — User Guide
+# CodeMate: Your Coding Companion — User Guide
 
 > **CodeMate** is an AI-powered desktop assistant that lives in your system tray and watches your clipboard. The moment you copy a piece of code, a small glowing bubble appears on screen. Click it, and CodeMate analyzes your code — finding bugs, explaining logic, and suggesting fixes — all powered by a fine-tuned language model running **entirely on your device**. No cloud. No API keys. No data leaves your machine.
 
@@ -781,4 +781,4 @@ The project includes a complete ML training pipeline (in `Model Training CODE/`)
 
 ---
 
-*CodeMate v1.0 — Built with Qwen2.5-Coder-1.5B-Instruct + LoRA fine-tuning*
+*CodeMate: Your Coding Companion v1.0 — Built with Qwen2.5-Coder-1.5B-Instruct + LoRA fine-tuning*

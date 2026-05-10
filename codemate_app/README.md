@@ -1,4 +1,7 @@
-<h1 align="center">⚡ CodeMate</h1>
+<p align="center">
+  <img src="assets/CodeMate-logo.png" width="150" alt="CodeMate Logo"/>
+</p>
+<h1 align="center">CodeMate: Your Coding Companion</h1>
 <p align="center">
   <strong>AI-powered code debugger &amp; explainer that lives in your clipboard</strong><br/>
   <em>Copy code anywhere → floating bubble appears → one click → instant AI analysis</em>
@@ -335,7 +338,9 @@ genai/
 │   │   └── widgets/                 # Custom gauge widgets
 │   │
 │   └── assets/
-│       └── icon.png                 # App icon
+│       ├── CodeMate-logo.png        # App logo (high-res)
+│       ├── CodeMate-logo.ico        # App icon (Windows .ico)
+│       └── icon.png                 # Legacy icon
 │
 ├── Application Screenshots/         # UI screenshots
 │   ├── application_dashboard.PNG    # Dashboard view

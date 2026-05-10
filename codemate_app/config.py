@@ -81,7 +81,7 @@ API_CONFIG = {
 
 # ── UI ───────────────────────────────────────────────────────
 UI_CONFIG = {
-    "app_name": "CodeMate",
+    "app_name": "CodeMate: Your Coding Companion",
     "bubble_timeout_ms": 6000,          # auto-hide after 6s
     "bubble_size": 56,
     "stats_refresh_ms": 1000,           # 1s dashboard refresh

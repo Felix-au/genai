@@ -1,4 +1,4 @@
-# CodeMate — Quick Guide
+# CodeMate: Your Coding Companion — Quick Guide
 
 An AI-powered desktop code debugger & explainer that lives in your clipboard. Copy code from anywhere — a floating bubble appears — click it for instant AI analysis.
 
