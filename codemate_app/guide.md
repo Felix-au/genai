@@ -21,7 +21,7 @@ On first launch, the base model (~3GB) is auto-downloaded from HuggingFace. Subs
 
 ### Option B — Standalone EXE
 
-Download `CodeMate.exe` from [Releases](https://github.com/Felix-au/genai/releases) — no Python installation needed.
+Download `CodeMate.exe` from [Releases](https://github.com/Felix-au/CodeMate-Your-Coding-Companion/releases) — no Python installation needed.
 
 ```
 Just double-click CodeMate.exe

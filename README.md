@@ -237,7 +237,7 @@ The project includes a complete ML training pipeline alongside the desktop app:
 
 ### Option A — Standalone EXE (No Python Required)
 
-Download `CodeMate.exe` from [Releases](https://github.com/Felix-au/genai/releases) and run it. All dependencies are bundled inside the EXE. The AI model (~3GB) downloads automatically on first launch.
+Download `CodeMate.exe` from [Releases](https://github.com/Felix-au/CodeMate-Your-Coding-Companion/releases) and run it. All dependencies are bundled inside the EXE. The AI model (~3GB) downloads automatically on first launch.
 
 ### Option B — From Source
 
