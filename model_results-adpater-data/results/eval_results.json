@@ -1,6 +1,0 @@
-{
-  "bleu": 0.8801,
-  "rouge_l": 0.8526,
-  "codebleu": 0.8355,
-  "n_samples": 100
-}
